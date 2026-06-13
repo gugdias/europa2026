@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🗺 Roteiros Recomendados — Grécia × Puglia (12–20/set)</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--gold:#d4af37;--gold2:#f0d060;--green:#3fb950;--red:#f85149;--blue:#58a6ff;--purple:#bc8cff;--ita:#3fb950;--gre:#58a6ff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;line-height:1.6;padding-bottom:3rem}
+header{text-align:center;padding:2rem 1rem 1.2rem;border-bottom:1px solid var(--border);background:linear-gradient(135deg,#0d1117,#1a2332)}
+h1{color:var(--gold2);font-size:1.65rem;line-height:1.2}
+.back{color:var(--blue);font-size:.85rem;text-decoration:none}
+.sub{color:var(--muted);font-size:.85rem;max-width:820px;margin:.5rem auto 0}
+.wrap{max-width:1100px;margin:1.4rem auto;padding:0 1.2rem}
+h2{color:var(--gold2);font-size:1.2rem;margin:1.8rem 0 .7rem}
+h3{font-size:1rem;color:#fff;margin:1.2rem 0 .5rem}
+.frame{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-top:.8rem}
+.frame span{background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:20px;padding:4px 13px;font-size:.76rem;color:var(--muted)}
+.info{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1rem 1.2rem;margin-bottom:1rem;font-size:.86rem}
+.info strong{color:var(--gold2)}
+.info ul{margin-left:1.2rem}
+.info a{color:var(--blue)}
+
+/* tabs */
+.dest-tabs{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin:1rem 0 1.4rem}
+.dest-tab{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:10px 22px;border-radius:14px;cursor:pointer;font-size:1rem;font-weight:700;transition:all .2s}
+.dest-tab:hover{color:var(--gold2)}
+.dest-tab.active{border-color:var(--gold);color:#0d1117}
+#tab-gr.active{background:var(--gre);color:#0d1117;border-color:var(--gre)}
+#tab-pu.active{background:var(--ita);color:#0d1117;border-color:var(--ita)}
+.dest-pane{display:none}
+.dest-pane.on{display:block}
+
+/* map */
+.map{height:440px;width:100%;border-radius:14px;border:1px solid var(--border);z-index:1}
+.leaflet-popup-content{font-size:.82rem}
+.leaflet-popup-content b{color:#0d1117}
+.pin{width:26px;height:26px;border-radius:50%;color:#0d1117;font-weight:800;font-size:.78rem;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.9);box-shadow:0 2px 6px rgba(0,0,0,.5)}
+.legend{display:flex;gap:1rem;flex-wrap:wrap;margin:.6rem 0 0;font-size:.76rem;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:5px}
+.dot{width:13px;height:13px;border-radius:50%;display:inline-block;border:1px solid rgba(255,255,255,.5)}
+.maphint{font-size:.72rem;color:var(--muted);margin-top:6px}
+
+/* day timeline */
+.day{display:grid;grid-template-columns:54px 1fr;gap:.9rem;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.9rem 1.1rem;margin-bottom:.8rem}
+.day .num{width:44px;height:44px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;line-height:1}
+.gr .day .num{background:rgba(88,166,255,.15);color:var(--gre);border:1px solid rgba(88,166,255,.4)}
+.pu .day .num{background:rgba(63,185,80,.15);color:var(--ita);border:1px solid rgba(63,185,80,.4)}
+.day .num small{font-size:.5rem;color:var(--muted);font-weight:600;margin-top:2px}
+.day .dtitle{font-size:.95rem;color:#fff;font-weight:700}
+.day .base{font-size:.7rem;font-weight:700;padding:2px 9px;border-radius:9px;margin-left:6px;vertical-align:middle}
+.base-stay{background:rgba(63,185,80,.15);color:var(--green)}
+.base-move{background:rgba(227,179,65,.15);color:#e3b341}
+.day .dbody{font-size:.83rem;margin-top:5px}
+.day .meta{font-size:.74rem;color:var(--muted);margin-top:6px;border-top:1px dashed var(--border);padding-top:6px}
+.day .meta b{color:var(--gold2)}
+.day .why{font-size:.74rem;color:var(--text);margin-top:5px}
+.day .why b{color:var(--blue)}
+
+/* must do + priorities */
+.musts{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.6rem}
+.must{background:rgba(212,175,55,.07);border:1px solid rgba(212,175,55,.25);border-radius:11px;padding:8px 11px;font-size:.81rem}
+.must b{color:var(--gold2)}
+.prio{display:grid;grid-template-columns:1fr;gap:.5rem}
+.prow{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:9px 12px;font-size:.83rem;display:grid;grid-template-columns:130px 1fr;gap:.7rem;align-items:center}
+.prow .lab{font-weight:700}
+.prow .bar{font-size:.8rem;letter-spacing:1px}
+.s5{color:var(--green)}.s4{color:#8ddb8d}.s3{color:#e3b341}
+
+/* alternatives + decision */
+.alt{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:.9rem 1.1rem;margin-bottom:.7rem;font-size:.84rem}
+.alt h4{font-size:.92rem;color:#fff;margin-bottom:4px}
+.alt .star{color:var(--gold2)}
+.alt .seq{color:var(--muted);font-size:.78rem;margin:4px 0}
+.decide{background:linear-gradient(135deg,rgba(212,175,55,.1),rgba(88,166,255,.06));border:1px solid var(--gold);border-radius:13px;padding:1rem 1.2rem;font-size:.85rem}
+.decide table{border-collapse:collapse;width:100%;margin-top:.5rem}
+.decide td{padding:7px 8px;border-top:1px solid var(--border);font-size:.83rem;vertical-align:top}
+.decide td:first-child{color:var(--muted);width:55%}
+.decide td:last-child{font-weight:700;color:var(--gold2)}
+.winner{font-size:.82rem;background:rgba(63,185,80,.08);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:8px 11px;margin-top:.6rem}
+.winner b{color:var(--green)}
+footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.74rem;border-top:1px solid var(--border);margin-top:2rem;line-height:1.8}
+footer a{color:var(--blue)}
+@media(max-width:640px){.prow{grid-template-columns:1fr}.map{height:360px}}
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="europa2026.html">← Voltar ao dashboard</a>
+  <h1>🗺 Roteiros Recomendados — os de consenso</h1>
+  <p class="sub">Os dois roteiros que <strong>venceram os deep dives</strong> (14 vlogs analisados), montados em torno do que <strong>não pode faltar</strong> e do que vocês priorizam: <strong>praia · agito · gastronomia</strong>. Cada um com mapa, dia a dia detalhado e opções alternativas com critérios de decisão.</p>
+  <div class="frame">
+    <span>✈️ GRU 11/set (após 19h)</span>
+    <span>🛬 Destino 12/set</span>
+    <span>🗓 8 dias: 12–20/set</span>
+    <span>🛫 → Lisboa 20/set</span>
+    <span>🏠 LIS 20–27</span>
+    <span>✈️ LIS→GRU 27/set (direto)</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="info" style="background:linear-gradient(135deg,rgba(88,166,255,.08),rgba(63,185,80,.06))">
+  <strong>Como ler esta página:</strong> cada destino traz <b style="color:var(--gold2)">(1)</b> o mapa do trajeto · <b style="color:var(--gold2)">(2)</b> o roteiro recomendado de consenso, dia a dia · <b style="color:var(--gold2)">(3)</b> o que não pode faltar · <b style="color:var(--gold2)">(4)</b> como ele entrega as prioridades · <b style="color:var(--gold2)">(5)</b> 2 roteiros alternativos + um quadro de decisão. No fim, o desempate entre os dois destinos.
+  <br><br>📊 Embasamento completo: <a href="batalha-puglia-grecia.html">⚔️ Batalha Puglia × Grécia</a> · 🔍 <a href="deepdive-ciclades.html">Deep dive Paros+Naxos</a> · <a href="deepdive-puglia.html">Deep dive Puglia</a>
+</div>
+
+<div class="dest-tabs">
+  <button class="dest-tab" id="tab-gr" onclick="showDest('gr')">🇬🇷 Grécia — Paros + Naxos</button>
+  <button class="dest-tab" id="tab-pu" onclick="showDest('pu')">🇮🇹 Puglia — Norte + Salento</button>
+</div>
+
+<!-- ============================ GRÉCIA ============================ -->
+<div class="dest-pane gr" id="pane-gr">
+
+  <h2>🇬🇷 Grécia — Paros (3 noites) + Naxos (3 noites)</h2>
+  <p class="info" style="margin-bottom:.8rem">O <strong>roteiro consenso</strong> do deep dive das Cíclades: 6 dos 7 vlogs apontam Paros+Naxos como "mais barata e autêntica que Mykonos/Santorini" e o combo "ideal para amigos". <strong>Paros</strong> entrega vibe + vida noturna charmosa (Naoussa); <strong>Naxos</strong> entrega praia de areia dourada + comida + autenticidade.</p>
+
+  <div id="map-gr" class="map"></div>
+  <div class="legend">
+    <span><i class="dot" style="background:#bc8cff"></i> Porta de entrada/saída</span>
+    <span><i class="dot" style="background:#3fb950"></i> Base (onde você dorme)</span>
+    <span><i class="dot" style="background:#58a6ff"></i> Praia</span>
+    <span><i class="dot" style="background:#d4af37"></i> Cidade / ponto histórico</span>
+  </div>
+  <p class="maphint">🖱 Arraste para mover, use +/− para zoom, clique nos pinos. A linha tracejada é o trajeto de ferry/voo Atenas → Paros → Naxos (Atenas fica ao norte — dê zoom out para ver).</p>
+
+  <h2>📅 Roteiro dia a dia</h2>
+
+  <div class="day"><div class="num">1<small>SÁB 12</small></div><div>
+    <span class="dtitle">Chegada + Atenas</span><span class="base base-move">1 noite · Plaka</span>
+    <div class="dbody">Pouso em Atenas vindo da Europa. Táxi até a Plaka (base de 1 noite). Fim de tarde tranquilo: subir à Acrópole no horário de menos fila/calor <em>ou</em> só jantar com vista do Partenon iluminado em Monastiraki.</div>
+    <div class="why"><b>Por quê:</b> o consenso trata Atenas como "1 dia, não mais" — é a porta de entrada e o ponto de partida dos ferries. Dormir em Plaka facilita o táxi cedo para o porto de Pireu.</div>
+    <div class="meta"><b>Logística:</b> reserve transfer cedo para Pireu no dia seguinte.</div>
+  </div></div>
+
+  <div class="day"><div class="num">2<small>DOM 13</small></div><div>
+    <span class="dtitle">Ferry Pireu → Paros · noite em Naoussa</span><span class="base base-stay">base Naoussa (3 noites)</span>
+    <div class="dbody">Manhã: ferry de Pireu a Paros. Check-in em <strong>Naoussa</strong> — o hub de bares e charme apontado por todos os vlogs. Tarde no porto velho; primeira noite nos bares à beira-d'água (o agito charmoso que vocês pediram).</div>
+    <div class="why"><b>Por quê:</b> Naoussa = "vibe relaxante com boa vida noturna" (Diego); base perfeita para "girls/friends trip".</div>
+    <div class="meta"><b>Ferry:</b> Blue Star convencional ~4h (~€41) ou SeaJets rápido ~3h20 (~€65) · até 6 saídas/dia · reserve no Ferryhopper.</div>
+  </div></div>
+
+  <div class="day"><div class="num">3<small>SEG 14</small></div><div>
+    <span class="dtitle">Kolymbithres + noite em Naoussa</span><span class="base base-stay">base Naoussa</span>
+    <div class="dbody">Dia em <strong>Kolymbithres</strong>, a praia-cenário de rochas esculpidas (15 min da base). Alugue carro ou quadriciclo (liberdade total — consenso dos vlogs). Se ventar (meltemi), vá às enseadas protegidas <strong>Monastiri</strong> ou <strong>Marcello</strong>. Noite: de novo os bares de Naoussa, o ponto alto da balada.</div>
+    <div class="meta"><b>Logística:</b> quadriciclo ~€35/dia · carro ~€70/dia (÷3).</div>
+  </div></div>
+
+  <div class="day"><div class="num">4<small>TER 15</small></div><div>
+    <span class="dtitle">Antiparos (dia inteiro) ou Golden Beach + Lefkes</span><span class="base base-stay">base Naoussa</span>
+    <div class="dbody">Dia inteiro em <strong>Antiparos</strong>: carro/quadri até Pounta e ferry de 7 min (a cada 30 min, ~€1,50 pp) — praias e a caverna. <em>Alternativa de filme mais lento:</em> <strong>Golden Beach</strong> (windsurf) + pôr do sol no vilarejo montanhoso de <strong>Lefkes</strong>.</div>
+    <div class="why"><b>Por quê:</b> Antiparos é o "+1" que os vlogs recomendam coladinho a Paros. "Não tente como meia tarde — é dia inteiro."</div>
+  </div></div>
+
+  <div class="day"><div class="num">5<small>QUA 16</small></div><div>
+    <span class="dtitle">Ferry Paros → Naxos · Portara no pôr do sol</span><span class="base base-stay">base Chora/Naxos (3 noites)</span>
+    <div class="dbody">Ferry curto até Naxos. Check-in em <strong>Chora (Naxos Town)</strong> — base ideal (Diego). Fim de tarde: <strong>Portara (Portal de Apolo)</strong> no pôr do sol — o ícone de Naxos. Depois, jantar e passeio pelo Kastro veneziano.</div>
+    <div class="meta"><b>Ferry:</b> 25–50 min · ~€8–15 · 8–12 saídas/dia em setembro (Blue Star, Fast Ferries, SeaJets).</div>
+  </div></div>
+
+  <div class="day"><div class="num">6<small>QUI 17</small></div><div>
+    <span class="dtitle">Areia dourada: Plaka / Agios Prokopios</span><span class="base base-stay">base Chora/Naxos</span>
+    <div class="dbody">Dia de praia: <strong>Plaka</strong> (km de areia dourada, a melhor para o dia inteiro) e/ou <strong>Agios Prokopios</strong> (top em rankings da Grécia), 10 min da base. Se ventar, <strong>Glifada</strong> é protegida.</div>
+    <div class="why"><b>Por quê:</b> areia de verdade na porta de casa — o trunfo da Grécia no quesito praia, sem precisar de volante.</div>
+  </div></div>
+
+  <div class="day"><div class="num">7<small>SEX 18</small></div><div>
+    <span class="dtitle">Interior de Naxos (mármore + montanha)</span><span class="base base-stay">base Chora/Naxos</span>
+    <div class="dbody">Carro pelo interior: <strong>Halki</strong> (centro histórico, destilaria de kitron), <strong>Filoti</strong> e a vila de mármore <strong>Apeiranthos</strong>. Estátuas kouros, Templo de Deméter. Almoço em taverna de família; vinho local a ~€3,60.</div>
+    <div class="why"><b>Por quê:</b> a profundidade autêntica que Estevam e o casal econômico mais destacam em Naxos.</div>
+  </div></div>
+
+  <div class="day"><div class="num">8<small>SÁB 19</small></div><div>
+    <span class="dtitle">Último dia livre + despedida</span><span class="base base-stay">base Chora/Naxos</span>
+    <div class="dbody">Último mergulho (Agios Prokopios/Plaka), compras no Kastro e jantar de despedida. Prepare a logística do dia seguinte (voo/ferry de volta).</div>
+  </div></div>
+
+  <div class="day"><div class="num">✈<small>DOM 20</small></div><div>
+    <span class="dtitle">Rumo a Lisboa</span><span class="base base-move">saída do destino</span>
+    <div class="dbody"><strong>Opção mais segura:</strong> voo Naxos (JNX) → Atenas (~40–45 min; Sky Express/Olympic/Aegean). <strong>Opção econômica:</strong> ferry Naxos → Pireu (~3h45–5h30, ~€40–60), mas sensível ao vento meltemi. Em Atenas, conexão Atenas → Lisboa direto (TAP/Aegean).</div>
+    <div class="meta">⚠️ <b>Atenção honesta:</b> o voo doméstico em setembro custa <b>~€120–180</b> (não €60) e tem poucos assentos — reserve cedo. Se optar pelo ferry no dia do voo internacional, há risco de meltemi; o mais seguro é voar JNX→ATH <em>ou</em> ir um dia antes para Atenas.</div>
+  </div></div>
+
+  <h2>✅ O que não pode faltar (Grécia)</h2>
+  <div class="musts">
+    <div class="must"><b>Portara ao pôr do sol</b> — o ícone de Naxos, inegociável.</div>
+    <div class="must"><b>Uma noite nos bares do porto de Naoussa</b> — o agito da viagem.</div>
+    <div class="must"><b>Plaka ou Agios Prokopios</b> — a areia dourada de Naxos.</div>
+    <div class="must"><b>Kolymbithres</b> — a praia-cenário de Paros.</div>
+    <div class="must"><b>Apeiranthos + vinho de Naxos</b> — a vila de mármore autêntica.</div>
+    <div class="must"><b>Antiparos</b> — o dia-extra que todo vlog recomenda.</div>
+  </div>
+
+  <h2>🎯 Como entrega as prioridades</h2>
+  <div class="prio">
+    <div class="prow"><span class="lab">🏖 Praia</span><span><span class="bar s5">●●●●●</span> &nbsp;Areia dourada a 10 min da base (Plaka, Agios Prokopios, Kolymbithres). <b>O ponto mais forte.</b></span></div>
+    <div class="prow"><span class="lab">🪩 Agito</span><span><span class="bar s4">●●●●○</span> &nbsp;Naoussa todas as noites; Mykonos a 45 min de ferry se quiserem uma noite lendária.</span></div>
+    <div class="prow"><span class="lab">🍝 Gastronomia</span><span><span class="bar s4">●●●●○</span> &nbsp;Peixe fresco, queijos de Naxos, vinho €3,60 — coadjuvante de luxo, não o motivo da viagem.</span></div>
+  </div>
+
+  <h2>🔀 Roteiros alternativos + decisão</h2>
+  <div class="alt"><h4>Opção A — Paros 3n + Naxos 3n <span class="star">⭐ consenso (acima)</span></h4>
+    <div class="seq">Atenas → Paros (Naoussa) → Naxos (Chora) → volta</div>
+    O equilíbrio que 6 dos 7 vlogs desenham: praia top + agito charmoso + autenticidade.</div>
+  <div class="alt"><h4>Opção B — + 1 noite de Mykonos (injeção de balada)</h4>
+    <div class="seq">Atenas → <b>Mykonos (1n)</b> → Paros (3n) → Naxos (2n) → volta</div>
+    Segue o comparativo TIM&amp;FIN (Mykonos p/ agito + Paros p/ equilíbrio). Custa +€150–250 pp (Mykonos é cara até em setembro) e adiciona 1 ferry.</div>
+  <div class="alt"><h4>Opção C — Só Paros (+Antiparos), uma mala só</h4>
+    <div class="seq">Atenas → Paros/Naoussa (4n) → Paros/Parikia (2n) → bate-volta a Naxos → volta</div>
+    Para quem odeia logística: zero troca de mala; Paros é a ilha "girls trip" por consenso. Perde a profundidade de Naxos.</div>
+
+  <div class="decide">
+    <strong>🧭 Subterfúgios para decidir (Grécia):</strong>
+    <table>
+      <tr><td>"Queremos dançar até de manhã em pelo menos uma noite."</td><td>→ Opção B (Mykonos)</td></tr>
+      <tr><td>"Detestamos arrumar mala e pegar ferry no meio da viagem."</td><td>→ Opção C (só Paros)</td></tr>
+      <tr><td>"Queremos o equilíbrio praia + agito + autenticidade."</td><td>→ Opção A ⭐</td></tr>
+    </table>
+    <div class="winner"><b>Recomendação:</b> Opção A. As duas ilhas se completam (Paros = noite/charme, Naxos = praia/comida) e cabem com folga em 8 dias. Mykonos entra só se a balada pesada for inegociável.</div>
+  </div>
+
+</div>
+
+<!-- ============================ PUGLIA ============================ -->
+<div class="dest-pane pu" id="pane-pu">
+
+  <h2>🇮🇹 Puglia — Norte + Salento (2 bases)</h2>
+  <p class="info" style="margin-bottom:.8rem">O <strong>roteiro consenso</strong> do deep dive da Puglia: 6 dos 7 vlogs contribuem com um pedaço e só este costura todos. Abre no agito de <strong>Bari</strong>, instala o charme em <strong>Monopoli</strong> (norte) e desce ao <strong>Salento</strong> (base Otranto) onde mora a areia de verdade. Gastronomia é o trunfo absoluto do destino.</p>
+
+  <div id="map-pu" class="map"></div>
+  <div class="legend">
+    <span><i class="dot" style="background:#bc8cff"></i> Porta de entrada/saída</span>
+    <span><i class="dot" style="background:#3fb950"></i> Base (onde você dorme)</span>
+    <span><i class="dot" style="background:#58a6ff"></i> Praia</span>
+    <span><i class="dot" style="background:#d4af37"></i> Cidade / ponto histórico</span>
+  </div>
+  <p class="maphint">🖱 Arraste para mover, use +/− para zoom, clique nos pinos. A linha tracejada segue a ordem do roteiro de carro (norte → Valle d'Itria → Salento).</p>
+
+  <h2>📅 Roteiro dia a dia</h2>
+
+  <div class="day"><div class="num">1<small>SÁB 12</small></div><div>
+    <span class="dtitle">Chegada Bari · noite na Bari Vecchia</span><span class="base base-move">1 noite · Bari</span>
+    <div class="dbody">Pouso no aeroporto de Bari (BRI). Pegue o carro (obrigatório na Puglia — consenso universal). Noite na <strong>Bari Vecchia</strong>: o "caos interessantíssimo" do Diego — orecchiette feita na rua, pizzarias locais, energia mais agitada que o resto da região.</div>
+    <div class="why"><b>Por quê:</b> abrir pelo agito de Bari, onde a noite da Puglia é mais viva.</div>
+    <div class="meta"><b>Logística:</b> pesquise o restaurante antes de sentar (golpe turístico citado em Bari).</div>
+  </div></div>
+
+  <div class="day"><div class="num">2<small>DOM 13</small></div><div>
+    <span class="dtitle">Polignano + Monopoli</span><span class="base base-stay">base Monopoli (3 noites)</span>
+    <div class="dbody">Manhã em <strong>Polignano a Mare</strong>: Lama Monachile para a foto (é cascalho — leve calçado) e o gelato lendário. Tarde: check-in em <strong>Monopoli</strong>, base estratégica das 3 noites (dica do Estevam), com pôr do sol no Porto Antico.</div>
+    <div class="meta"><b>Logística:</b> Bari → Monopoli ~40 min de carro (ou trem regional ~€1,30).</div>
+  </div></div>
+
+  <div class="day"><div class="num">3<small>SEG 14</small></div><div>
+    <span class="dtitle">Praia perto + sunset</span><span class="base base-stay">base Monopoli</span>
+    <div class="dbody">Dia de praia da base: <strong>Cala Porta Vecchia</strong> (Monopoli) ou as praias do <strong>Capitolo</strong>. Mar ~24–25°C em setembro. Noite de frutos do mar e aperitivo na piazza.</div>
+  </div></div>
+
+  <div class="day"><div class="num">4<small>TER 15</small></div><div>
+    <span class="dtitle">Valle d'Itria completo</span><span class="base base-stay">base Monopoli</span>
+    <div class="dbody"><strong>Alberobello antes das 10h</strong> (dica do Diego, para fugir do fluxo) — os trulli. Depois <strong>Locorotondo</strong> (charme histórico), almoço de <strong>bombette em Cisternino</strong> e fim de tarde em <strong>Ostuni</strong>, a cidade branca.</div>
+    <div class="meta"><b>Logística:</b> Alberobello→Monopoli ~25 min · Alberobello→Ostuni ~40 min · cuidado com ZTL e faixas azuis (estacionamento pago).</div>
+  </div></div>
+
+  <div class="day"><div class="num">5<small>QUA 16</small></div><div>
+    <span class="dtitle">Mudança para Otranto</span><span class="base base-stay">base Otranto (3 noites)</span>
+    <div class="dbody">Drive para o Salento e check-in em <strong>Otranto</strong>. Tarde no centro histórico: castelo, catedral do mosaico, muralhas — mar + centro a pé (dica do Diego: hospedar em Otranto).</div>
+    <div class="meta"><b>Logística:</b> Monopoli → Otranto ~1h45–2h de carro.</div>
+  </div></div>
+
+  <div class="day"><div class="num">6<small>QUI 17</small></div><div>
+    <span class="dtitle">Dia de AREIA no Salento</span><span class="base base-stay">base Otranto</span>
+    <div class="dbody">O dia de praia perfeito na costa jônica: <strong>Pescoluse</strong> ("Maldive del Salento" — 4 km de areia branca e água translúcida) ou <strong>Punta Prosciutto</strong> (areia branca, água rasa turquesa) — das melhores praias de areia da Itália.</div>
+    <div class="why"><b>Por quê:</b> a areia de verdade da Puglia exige descer ao Salento — e aqui ela é espetacular.</div>
+    <div class="meta"><b>Logística:</b> ~1h–1h15 de Otranto · cheque feriados locais (lotam praia em setembro).</div>
+  </div></div>
+
+  <div class="day"><div class="num">7<small>SEX 18</small></div><div>
+    <span class="dtitle">Lecce + Grotta della Poesia</span><span class="base base-stay">base Otranto</span>
+    <div class="dbody"><strong>Lecce</strong>, a "Florença do Sul": barroco, Basílica de Santa Cruz e o pasticciotto. Na volta, <strong>Grotta della Poesia</strong> (Roca Vecchia) — o mergulho icônico em plataforma rochosa (sem areia, mas imperdível).</div>
+    <div class="meta"><b>Logística:</b> Otranto → Lecce ~45 min · comércio fecha na sesta (13h–16h).</div>
+  </div></div>
+
+  <div class="day"><div class="num">8<small>SÁB 19</small></div><div>
+    <span class="dtitle">Último dia: beach club ou cooking class</span><span class="base base-stay">base Otranto</span>
+    <div class="dbody">Último dia livre: <strong>beach club</strong> (~€140–150/dia para 3) <em>ou</em> <strong>cooking class de orecchiette</strong>. Jantar de despedida em Otranto ou Lecce.</div>
+  </div></div>
+
+  <div class="day"><div class="num">✈<small>DOM 20</small></div><div>
+    <span class="dtitle">Rumo a Lisboa</span><span class="base base-move">saída do destino</span>
+    <div class="dbody">Drive Otranto → aeroporto de Bari e voo para Lisboa (Vueling via BCN ~R$1.200, ou rota com conexão).</div>
+    <div class="meta">⚠️ <b>Atenção:</b> são ~2h de estrada até Bari + check-in — saia cedo. Devolva o carro no aeroporto.</div>
+  </div></div>
+
+  <h2>✅ O que não pode faltar (Puglia)</h2>
+  <div class="musts">
+    <div class="must"><b>Polignano a Mare</b> — Lama Monachile, o cartão-postal.</div>
+    <div class="must"><b>Trulli de Alberobello antes das 10h</b> — sem multidão.</div>
+    <div class="must"><b>Bombette em Cisternino</b> — o Valle d'Itria no prato.</div>
+    <div class="must"><b>Ostuni</b> — a cidade branca ao pôr do sol.</div>
+    <div class="must"><b>Pescoluse / Punta Prosciutto</b> — o dia de areia no Salento.</div>
+    <div class="must"><b>Lecce barroca + Grotta della Poesia</b>.</div>
+    <div class="must"><b>Bari Vecchia</b> — agito + orecchiette feita na rua.</div>
+  </div>
+
+  <h2>🎯 Como entrega as prioridades</h2>
+  <div class="prio">
+    <div class="prow"><span class="lab">🍝 Gastronomia</span><span><span class="bar s5">●●●●●</span> &nbsp;Burrata na origem, orecchiette, bombette, Primitivo €5 — "a melhor região da Itália". <b>O ponto mais forte.</b></span></div>
+    <div class="prow"><span class="lab">🏖 Praia</span><span><span class="bar s4">●●●●○</span> &nbsp;Areia top no Salento (Pescoluse, Punta Prosciutto), mas a ~1h das bases; o norte é pedra.</span></div>
+    <div class="prow"><span class="lab">🪩 Agito</span><span><span class="bar s3">●●●○○</span> &nbsp;Bari Vecchia + bares de Lecce. A balada de verdade (Gallipoli) já desliga em setembro.</span></div>
+  </div>
+
+  <h2>🔀 Roteiros alternativos + decisão</h2>
+  <div class="alt"><h4>Opção B — Norte + Salento, 2 bases <span class="star">⭐ consenso (acima)</span></h4>
+    <div class="seq">Bari → Monopoli (3n) → Valle d'Itria → Otranto (3n) → Salento → volta</div>
+    Charme no norte + a areia de verdade no sul. Um dia de estrada a mais, mas costura tudo que os vlogs pedem.</div>
+  <div class="alt"><h4>Opção A — Base única em Monopoli (ritmo leve)</h4>
+    <div class="seq">Bari → Monopoli (7 noites) → day trips de carro/trem</div>
+    Zero troca de mala, diárias ~€100 e trem barato. O preço é dirigir mais nos day trips longos — e a areia do Salento fica como bate-volta puxado.</div>
+  <div class="alt"><h4>Opção C — Masseria experience (a mais charmosa)</h4>
+    <div class="seq">Bari → Masseria no Valle d'Itria (4n) → Monopoli (3n)</div>
+    Masseria com piscina + vindima de setembro = a versão mais fotogênica. Sacrifica o agito (compense nas noites de Monopoli/Bari). Reserve a masseria cedo (poucas unidades).</div>
+
+  <div class="decide">
+    <strong>🧭 Subterfúgios para decidir (Puglia):</strong>
+    <table>
+      <tr><td>"Odiamos trocar de hotel e topamos dirigir mais."</td><td>→ Opção A (base única)</td></tr>
+      <tr><td>"Queremos a experiência charmosa de masseria + vindima."</td><td>→ Opção C (masseria)</td></tr>
+      <tr><td>"Queremos charme no norte + areia de verdade no sul."</td><td>→ Opção B ⭐</td></tr>
+    </table>
+    <div class="winner"><b>Recomendação:</b> Opção B. É a única que entrega areia de verdade (Salento) sem virar bate-volta cansativo, mantendo o charme do norte. A "A" sacrifica a areia; a "C" sacrifica o agito.</div>
+  </div>
+
+</div>
+
+<!-- ============================ DESEMPATE ============================ -->
+<h2>⚖️ E entre os dois destinos?</h2>
+<div class="decide">
+  Para o pedido específico das amigas (agito + praia + gastronomia), a <a href="batalha-puglia-grecia.html" style="color:var(--gold2);font-weight:700">batalha completa</a> dá <strong>Grécia 5 × 4 Puglia</strong> — porque ganha praia e agito (2 dos 3 pedidos) com folga, e em setembro a vantagem de agito aumenta (as Cíclades seguram a festa; a Puglia desliga os clubes).
+  <table>
+    <tr><td>"A noite perfeita é bar na beira do porto e talvez uma balada."</td><td>→ 🇬🇷 Grécia</td></tr>
+    <tr><td>"A noite perfeita é jantar de 3 horas com vinho e praça."</td><td>→ 🇮🇹 Puglia</td></tr>
+    <tr><td>"A régua da viagem é comer muito bem acima de tudo."</td><td>→ 🇮🇹 Puglia</td></tr>
+    <tr><td>"Queremos praia boa todo dia sem pegar o carro."</td><td>→ 🇬🇷 Grécia</td></tr>
+  </table>
+  <div class="winner">⚠️ <b>Independente da escolha:</b> reservar até julho (setembro é shoulder concorrido nos dois). Grécia: feche os ferries (Ferryhopper) junto com o hotel. Puglia: feche a masseria/Otranto primeiro.</div>
+</div>
+
+</div>
+
+<footer>
+  <strong>Base:</strong> roteiros de consenso dos deep dives (14 vlogs analisados) + verificação de logística ao vivo (jun/2026).<br>
+  Ferries: Greeka · Ferryhopper · DiscoverCyclades · Direct Ferries · Antiparos.com. Voo Naxos–Atenas: SKY express · Olympic Air · Skyscanner. Praias do Salento: visit.puglia.it · HD Salento · Beautiful Puglia. Tempos de carro na Puglia: Rick Steves Forum · The Road Reel · Puglia Guys.<br>
+  Mapas: © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> · Leaflet.<br>
+  🔗 <a href="europa2026.html">Dashboard</a> · <a href="batalha-puglia-grecia.html">Batalha Puglia × Grécia</a> · <a href="deepdive-ciclades.html">Deep dive Paros+Naxos</a> · <a href="deepdive-puglia.html">Deep dive Puglia</a>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ---- pontos do roteiro ----
+// t: gw=porta de entrada/saída, base=hospedagem, beach=praia, city=cidade/histórico
+// b:false = não entra no cálculo de enquadramento do mapa (fica fora do zoom inicial)
+var GR = [
+  {lat:37.9755,lng:23.7348,n:'A',t:'gw',  b:false,title:'Atenas',          desc:'Chegada + 1 noite (Plaka). Porta de entrada e saída dos ferries.'},
+  {lat:37.1245,lng:25.2360,n:'2',t:'base',title:'Naoussa · Paros',          desc:'Base 3 noites. O hub de bares e charme — o agito da viagem.'},
+  {lat:37.1300,lng:25.2230,n:'3',t:'beach',title:'Kolymbithres',            desc:'Praia-cenário de rochas esculpidas (15 min de Naoussa).'},
+  {lat:37.0386,lng:25.0820,n:'4',t:'beach',title:'Antiparos',               desc:'Dia inteiro: ferry de 7 min de Pounta, praias e caverna.'},
+  {lat:37.0560,lng:25.1820,n:'4',t:'city', title:'Lefkes · Paros',          desc:'Vilarejo montanhoso (alternativa ao dia de Antiparos).'},
+  {lat:37.0760,lng:25.2540,n:'4',t:'beach',title:'Golden Beach',            desc:'Areia dourada + windsurf (alternativa do dia 4).'},
+  {lat:37.1055,lng:25.3760,n:'5',t:'base', title:'Chora · Naxos',           desc:'Base 3 noites (Naxos Town). Kastro veneziano.'},
+  {lat:37.1095,lng:25.3745,n:'5',t:'city', title:'Portara (Portal de Apolo)',desc:'O ícone de Naxos — ver no pôr do sol.'},
+  {lat:37.0640,lng:25.3560,n:'6',t:'beach',title:'Plaka · Naxos',           desc:'Km de areia dourada, a 10 min da base. A melhor para o dia inteiro.'},
+  {lat:37.0810,lng:25.3640,n:'6',t:'beach',title:'Agios Prokopios',         desc:'Areia + água azul-piscina, top em rankings da Grécia.'},
+  {lat:37.0560,lng:25.4830,n:'7',t:'city', title:'Halki · Naxos',           desc:'Centro histórico do interior + destilaria de kitron.'},
+  {lat:37.0500,lng:25.5230,n:'7',t:'city', title:'Filoti · Naxos',          desc:'Vila de montanha no interior.'},
+  {lat:37.0680,lng:25.5560,n:'7',t:'city', title:'Apeiranthos',             desc:'Vila de mármore, a mais autêntica de Naxos.'}
+];
+var GR_ROUTE = [[37.9475,23.6370],[37.1245,25.2360],[37.1055,25.3760]]; // Pireu -> Paros -> Naxos
+
+var PU = [
+  {lat:41.1296,lng:16.8702,n:'1', t:'gw',   title:'Bari (Bari Vecchia)',     desc:'Chegada + 1 noite. O agito de abertura; orecchiette na rua.'},
+  {lat:40.9962,lng:17.2186,n:'2', t:'city', title:'Polignano a Mare',        desc:'Lama Monachile (cascalho) — o cartão-postal.'},
+  {lat:40.9510,lng:17.2967,n:'2', t:'base', title:'Monopoli',                desc:'Base estratégica 3 noites. Porto Antico ao pôr do sol.'},
+  {lat:40.7831,lng:17.2370,n:'4', t:'city', title:'Alberobello',             desc:'Os trulli — visite antes das 10h.'},
+  {lat:40.7544,lng:17.3262,n:'4', t:'city', title:'Locorotondo',             desc:'Charme histórico do Valle d\'Itria.'},
+  {lat:40.7416,lng:17.4218,n:'4', t:'city', title:'Cisternino',              desc:'Almoço de bombette na brasa.'},
+  {lat:40.7295,lng:17.5774,n:'4', t:'city', title:'Ostuni',                  desc:'A cidade branca, ao fim da tarde.'},
+  {lat:40.1462,lng:18.4910,n:'5', t:'base', title:'Otranto',                 desc:'Base 3 noites no Salento. Castelo + mar a pé.'},
+  {lat:40.2980,lng:17.7370,n:'6', t:'beach',title:'Punta Prosciutto',        desc:'Areia branca, água rasa turquesa (costa jônica).'},
+  {lat:39.8085,lng:18.2960,n:'6', t:'beach',title:'Pescoluse (Maldive del Salento)',desc:'4 km de areia branca e água translúcida.'},
+  {lat:40.3515,lng:18.1718,n:'7', t:'city', title:'Lecce',                   desc:'A "Florença do Sul" — barroco + pasticciotto.'},
+  {lat:40.2876,lng:18.4283,n:'7', t:'beach',title:'Grotta della Poesia',     desc:'Mergulho icônico em plataforma rochosa.'}
+];
+
+// ---- helpers ----
+function colorFor(t){return t==='base'?'#3fb950':t==='beach'?'#58a6ff':t==='gw'?'#bc8cff':'#d4af37';}
+function addMarkers(map, arr){
+  var pts=[];
+  arr.forEach(function(s){
+    var icon=L.divIcon({className:'',html:'<div class="pin" style="background:'+colorFor(s.t)+'">'+s.n+'</div>',iconSize:[26,26],iconAnchor:[13,13]});
+    L.marker([s.lat,s.lng],{icon:icon}).addTo(map).bindPopup('<b>'+s.title+'</b><br>'+s.desc);
+    if(s.b!==false) pts.push([s.lat,s.lng]);
+  });
+  return pts;
+}
+function tiles(map){
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(map);
+}
+
+var maps={};
+// Grécia: enquadra nas ilhas (Atenas fica fora do zoom inicial)
+var mGr=L.map('map-gr',{scrollWheelZoom:false});
+tiles(mGr);
+var gpts=addMarkers(mGr,GR);
+L.polyline(GR_ROUTE,{color:'#58a6ff',weight:2,dashArray:'5,9',opacity:.85}).addTo(mGr);
+var grBounds=L.latLngBounds(gpts);
+mGr.fitBounds(grBounds,{padding:[35,35]});
+maps.gr={map:mGr,bounds:grBounds};
+
+// Puglia: enquadra todos os pontos
+var mPu=L.map('map-pu',{scrollWheelZoom:false});
+tiles(mPu);
+var ppts=addMarkers(mPu,PU);
+L.polyline(PU.map(function(s){return [s.lat,s.lng];}),{color:'#3fb950',weight:2,dashArray:'5,9',opacity:.85}).addTo(mPu);
+var puBounds=L.latLngBounds(ppts);
+mPu.fitBounds(puBounds,{padding:[30,30]});
+maps.pu={map:mPu,bounds:puBounds};
+
+function showDest(d){
+  document.querySelectorAll('.dest-pane').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('.dest-tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById('pane-'+d).classList.add('on');
+  document.getElementById('tab-'+d).classList.add('active');
+  var m=maps[d];
+  setTimeout(function(){m.map.invalidateSize();m.map.fitBounds(m.bounds,{padding:[30,30]});},60);
+}
+showDest('gr');
+</script>
+</body>
+</html>
