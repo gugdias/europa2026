@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Europa Set/2026 — Dashboard de Decisão (Top 10)</title>
+<style>
+  :root {
+    --bg: #0d1117; --card-bg: #161b22; --border: #30363d; --text: #e6edf3;
+    --muted: #8b949e; --gold: #d4af37; --gold2: #f0d060; --green: #3fb950;
+    --yellow: #e3b341; --red: #f85149; --blue: #58a6ff; --purple: #bc8cff; --radius: 16px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; line-height: 1.6; }
+
+  .site-header { background: linear-gradient(135deg, #0d1117 0%, #1a2332 100%); border-bottom: 1px solid var(--border); padding: 2rem 1.5rem 1.5rem; text-align: center; position: relative; }
+  .site-header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center top, rgba(212,175,55,0.1) 0%, transparent 70%); pointer-events: none; }
+  .site-header h1 { font-size: clamp(1.5rem, 4vw, 2.4rem); font-weight: 700; color: var(--gold2); }
+  .trip-meta { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; margin-top: 0.75rem; }
+  .trip-meta span { background: rgba(255,255,255,0.07); border: 1px solid var(--border); border-radius: 20px; padding: 4px 14px; font-size: 0.82rem; color: var(--muted); }
+  .site-header p.subtitle { color: var(--muted); font-size: 0.9rem; margin-top: 0.5rem; max-width: 720px; margin-left: auto; margin-right: auto; }
+
+  /* DASHBOARD */
+  .dash-wrap { max-width: 1400px; margin: 1.5rem auto 0; padding: 0 1.5rem; }
+  .dash-title { font-size: 1.1rem; font-weight: 700; color: var(--gold2); margin-bottom: 0.3rem; }
+  .dash-sub { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.8rem; }
+  .dash-table-scroll { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; }
+  table.dash { border-collapse: collapse; width: 100%; min-width: 980px; font-size: 0.8rem; }
+  table.dash th { background: #1a2230; color: var(--muted); text-transform: uppercase; font-size: 0.66rem; letter-spacing: 0.05em; padding: 9px 10px; text-align: left; cursor: pointer; white-space: nowrap; user-select: none; position: sticky; top: 0; }
+  table.dash th:hover { color: var(--gold2); }
+  table.dash td { padding: 8px 10px; border-top: 1px solid var(--border); white-space: nowrap; }
+  table.dash tr:hover td { background: rgba(212,175,55,0.05); }
+  table.dash td.name { font-weight: 700; color: #fff; }
+  table.dash td.name a { color: inherit; text-decoration: none; }
+  table.dash td.name a:hover { color: var(--gold2); }
+  .pill { padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; }
+  .pill-g { background: rgba(63,185,80,0.15); color: var(--green); }
+  .pill-y { background: rgba(227,179,65,0.15); color: var(--yellow); }
+  .pill-r { background: rgba(248,81,73,0.15); color: var(--red); }
+  .nota-big { font-weight: 800; color: var(--gold2); }
+  .mini-dots { letter-spacing: 1px; }
+
+  .filters { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; padding: 1.2rem 1.5rem 0.4rem; }
+  .filter-btn { background: var(--card-bg); border: 1px solid var(--border); color: var(--muted); padding: 6px 16px; border-radius: 20px; cursor: pointer; font-size: 0.82rem; transition: all 0.2s; }
+  .filter-btn:hover, .filter-btn.active { background: var(--gold); color: #0d1117; border-color: var(--gold); font-weight: 600; }
+
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.5rem; padding: 1.5rem; max-width: 1400px; margin: 0 auto; }
+
+  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+  .card.hidden { display: none; }
+  .card.highlight { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold), 0 8px 32px rgba(212,175,55,0.15); }
+
+  .card-header { position: relative; height: 210px; display: flex; flex-direction: column; justify-content: flex-end; padding: 1rem 1.2rem; background-size: cover; background-position: center; }
+  .card-header::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.85) 100%); }
+  .rank-badge { position: absolute; top: 12px; left: 12px; width: 38px; height: 38px; border-radius: 50%; background: rgba(0,0,0,0.65); border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; color: var(--gold); z-index: 2; }
+  .nota-badge { position: absolute; top: 12px; right: 12px; z-index: 2; background: rgba(0,0,0,0.7); border: 1px solid var(--gold); color: var(--gold2); border-radius: 12px; padding: 4px 12px; font-weight: 800; font-size: 0.95rem; }
+  .nota-badge small { display: block; font-size: 0.55rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; }
+  .novo-badge { position: absolute; top: 58px; left: 8px; z-index: 2; background: var(--purple); color: #0d1117; font-weight: 800; font-size: 0.62rem; padding: 3px 9px; border-radius: 10px; text-transform: uppercase; }
+  .card-header .country { position: relative; z-index: 2; font-size: 0.78rem; color: rgba(255,255,255,0.85); }
+  .card-header h2 { position: relative; z-index: 2; font-size: 1.25rem; font-weight: 700; color: #fff; line-height: 1.2; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+
+  .card-body { padding: 1rem 1.2rem; flex: 1; display: flex; flex-direction: column; gap: 0.9rem; }
+  .tagline { font-size: 0.84rem; color: var(--muted); font-style: italic; }
+
+  .fit-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; }
+  .fit-item { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px; padding: 6px 8px; text-align: center; }
+  .fit-item .fl { font-size: 0.62rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .fit-item .fv { font-size: 0.8rem; font-weight: 700; color: var(--gold2); letter-spacing: 1px; }
+
+  .cost-box { background: rgba(63,185,80,0.06); border: 1px solid rgba(63,185,80,0.25); border-radius: 12px; padding: 10px 12px; }
+  .cost-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--green); margin-bottom: 6px; }
+  .cost-row { display: flex; justify-content: space-between; font-size: 0.76rem; color: var(--text); padding: 1.5px 0; }
+  .cost-row span:first-child { color: var(--muted); }
+  .cost-total { display: flex; justify-content: space-between; border-top: 1px solid rgba(63,185,80,0.3); margin-top: 6px; padding-top: 6px; font-weight: 800; font-size: 0.95rem; color: var(--green); }
+
+  .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .pros-title, .cons-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+  .pros-title { color: var(--green); } .cons-title { color: var(--red); }
+  .pros ul, .cons ul { list-style: none; }
+  .pros li, .cons li { font-size: 0.78rem; padding: 2px 0 2px 14px; position: relative; line-height: 1.4; }
+  .pros li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-size: 0.7rem; }
+  .cons li::before { content: '✗'; position: absolute; left: 0; color: var(--red); font-size: 0.7rem; }
+
+  .reviews-box { background: rgba(88,166,255,0.06); border-left: 3px solid var(--blue); border-radius: 0 10px 10px 0; padding: 8px 10px; font-size: 0.77rem; }
+  .reviews-box strong { color: var(--blue); }
+  .reviews-fontes { font-size: 0.68rem; color: var(--muted); margin-top: 4px; }
+
+  .vlog-box { background: rgba(188,140,255,0.06); border: 1px solid rgba(188,140,255,0.25); border-radius: 12px; padding: 10px 12px; }
+  .vlog-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--purple); margin-bottom: 6px; }
+  .vlog-quote { font-size: 0.77rem; color: var(--text); font-style: italic; line-height: 1.45; }
+  .vlog-creator { font-size: 0.7rem; color: var(--muted); margin-top: 5px; }
+  .video-embed { margin-top: 8px; position: relative; width: 100%; padding-bottom: 56.25%; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+  .video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+  .sand-note { background: rgba(240,208,96,0.07); border: 1px dashed rgba(212,175,55,0.4); border-radius: 10px; padding: 6px 10px; font-size: 0.75rem; }
+  .sand-note strong { color: var(--gold2); }
+  .dive-btn { display: block; text-align: center; background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%); color: #0d1117; font-weight: 800; font-size: 0.82rem; padding: 9px 12px; border-radius: 10px; text-decoration: none; }
+  .dive-btn:hover { filter: brightness(1.1); }
+  .why-you { background: rgba(212,175,55,0.07); border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0; padding: 8px 10px; font-size: 0.78rem; }
+  .why-you strong { color: var(--gold); }
+  .sept-note { background: rgba(88,166,255,0.05); border-radius: 8px; padding: 6px 10px; font-size: 0.74rem; color: var(--muted); }
+
+  .links-section { border-top: 1px solid var(--border); padding-top: 0.8rem; display: flex; flex-wrap: wrap; gap: 5px; }
+  .blog-link { font-size: 0.72rem; background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--blue); padding: 3px 9px; border-radius: 10px; text-decoration: none; }
+  .blog-link:hover { background: rgba(88,166,255,0.15); }
+
+  details.others { max-width: 1400px; margin: 1rem auto 2rem; padding: 0 1.5rem; }
+  details.others summary { cursor: pointer; font-size: 1rem; font-weight: 700; color: var(--muted); padding: 0.8rem 1rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; }
+  details.others summary:hover { color: var(--gold2); }
+  .others-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem; }
+  .mini-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 0.9rem 1rem; }
+  .mini-card h3 { font-size: 0.95rem; color: #fff; }
+  .mini-card .mc-country { font-size: 0.7rem; color: var(--muted); }
+  .mini-card .mc-why { font-size: 0.74rem; color: var(--red); margin-top: 5px; }
+  .mini-card .mc-desc { font-size: 0.76rem; color: var(--muted); margin-top: 5px; }
+
+  footer { text-align: center; padding: 2rem 1rem; color: var(--muted); font-size: 0.76rem; border-top: 1px solid var(--border); margin-top: 1rem; line-height: 1.8; }
+  footer a { color: var(--blue); }
+
+  @media (max-width: 640px) {
+    .cards-grid { grid-template-columns: 1fr; padding: 1rem; }
+    .pros-cons { grid-template-columns: 1fr; }
+    .fit-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>🗺 Europa — 12 a 20 de setembro de 2026</h1>
+  <p class="subtitle">Top 10 roteiros para você + 2 amigas (35–39) que moram na Europa e querem: <strong>agito em parte da viagem · um pouco de praia · gastronomia</strong>. Sem Nápoles, sem França; Espanha clássica despriorizada (amiga de BCN já conhece). Depois: Lisboa (casa da irmã) até 27/set.</p>
+  <div class="trip-meta">
+    <span>✈️ Você: GRU 12/set (business)</span>
+    <span>🛬 Destino → Lisboa 20/set</span>
+    <span>🏠 LIS 20–27 (custo zero)</span>
+    <span>✈️ LIS→GRU 27/set (business)</span>
+    <span>🏨 Padrão 3-4★</span>
+    <span>💶 €1 ≈ R$ 5,98</span>
+  </div>
+</header>
+
+<div class="dash-wrap">
+  <div class="dash-title">📊 Dashboard comparativo — clique nos títulos para ordenar</div>
+  <div class="dash-sub">Custo = 8 dias no destino, por pessoa (hotel 3-4★, comida, transporte local, atividades, carro/apto ÷3) — custos individuais com voos em <a href="custos-amigas.html" style="color:var(--blue)">página separada</a>. 🏖 <strong>Areia:</strong> praia de areia boa ganha <strong>+1</strong> no critério praia (já somado). Pesquisa: Google Flights/Kayak + reviews multi-fonte, 10/jun/2026.</div>
+  <div class="dash-table-scroll">
+  <table class="dash" id="dashTable">
+    <thead><tr>
+      <th onclick="sortDash(0,false)">Destino</th>
+      <th onclick="sortDash(1,true)">Nota consenso</th>
+      <th onclick="sortDash(2,true)">🏖 Praia (c/ areia)</th>
+      <th onclick="sortDash(3,false)">🏝 Areia?</th>
+      <th onclick="sortDash(4,true)">🪩 Agito</th>
+      <th onclick="sortDash(5,true)">🍝 Gastro</th>
+      <th onclick="sortDash(6,true)">💰 Custo 8d p.p.</th>
+      <th onclick="sortDash(7,true)">✈️ Voo ida (SP)</th>
+      <th onclick="sortDash(8,true)">🧑 Lotação set</th>
+      <th onclick="sortDash(9,false)">🌦 Risco clima</th>
+    </tr></thead>
+    <tbody>
+      <tr><td class="name"><a href="#d1">1. Puglia 🇮🇹</a></td><td><span class="nota-big">9,0</span></td><td data-v="5">●●●●● <small>(4+1)</small></td><td><span class="pill pill-g">Boa — Salento</span></td><td data-v="3">●●●○○</td><td data-v="5">●●●●●</td><td data-v="6300">R$ 6,3k</td><td data-v="19.8">19h50</td><td data-v="2"><span class="pill pill-g">Tranquilo</span></td><td><span class="pill pill-g">Baixo</span></td></tr>
+      <tr><td class="name"><a href="#d2">2. Paros + Naxos 🇬🇷</a></td><td><span class="nota-big">9,2</span></td><td data-v="5">●●●●● <small>(+1)</small></td><td><span class="pill pill-g">Top — dourada</span></td><td data-v="4">●●●●○</td><td data-v="4">●●●●○</td><td data-v="6900">R$ 6,9k</td><td data-v="15.3">15h20</td><td data-v="3"><span class="pill pill-y">Moderado</span></td><td><span class="pill pill-y">Vento</span></td></tr>
+      <tr><td class="name"><a href="#d3">3. Sicília 🇮🇹</a></td><td><span class="nota-big">8,8</span></td><td data-v="5">●●●●● <small>(4+1)</small></td><td><span class="pill pill-g">Boa — SVLC</span></td><td data-v="3">●●●○○</td><td data-v="5">●●●●●</td><td data-v="6300">R$ 6,3k</td><td data-v="14.6">14h35</td><td data-v="2"><span class="pill pill-g">Tranquilo</span></td><td><span class="pill pill-g">Baixo</span></td></tr>
+      <tr><td class="name"><a href="#d4">4. Ibiza + Formentera 🇪🇸</a></td><td><span class="nota-big">8,5</span></td><td data-v="5">●●●●● <small>(+1)</small></td><td><span class="pill pill-g">Top — branca</span></td><td data-v="5">●●●●●</td><td data-v="3">●●●○○</td><td data-v="11400">R$ 11,4k</td><td data-v="17.3">17h20</td><td data-v="4"><span class="pill pill-r">Cheio</span></td><td><span class="pill pill-g">Baixo</span></td></tr>
+      <tr><td class="name"><a href="#d5">5. Malta + Gozo 🇲🇹</a></td><td><span class="nota-big">7,8</span></td><td data-v="4">●●●●○</td><td><span class="pill pill-y">Pouca</span></td><td data-v="4">●●●●○</td><td data-v="3">●●●○○</td><td data-v="5400">R$ 5,4k</td><td data-v="19.6">19h35</td><td data-v="4"><span class="pill pill-r">Cheio</span></td><td><span class="pill pill-g">Baixo</span></td></tr>
+      <tr><td class="name"><a href="#d6">6. Montenegro + Albânia 🇲🇪🇦🇱</a></td><td><span class="nota-big">8,3</span></td><td data-v="4">●●●●○</td><td><span class="pill pill-y">Parcial — Ksamil</span></td><td data-v="3">●●●○○</td><td data-v="3">●●●○○</td><td data-v="4200">R$ 4,2k</td><td data-v="18.8">18h50</td><td data-v="2"><span class="pill pill-g">Tranquilo</span></td><td><span class="pill pill-g">Baixo</span></td></tr>
+      <tr><td class="name"><a href="#d7">7. País Basco + Rioja 🇪🇸</a></td><td><span class="nota-big">8,7</span></td><td data-v="4">●●●●○ <small>(3+1)</small></td><td><span class="pill pill-g">Boa urbana</span></td><td data-v="4">●●●●○</td><td data-v="5">●●●●●</td><td data-v="6600">R$ 6,6k</td><td data-v="16.3">16h20</td><td data-v="3"><span class="pill pill-y">Moderado</span></td><td><span class="pill pill-y">Chuva</span></td></tr>
+      <tr><td class="name"><a href="#d8">8. Madeira 🇵🇹</a></td><td><span class="nota-big">8,6</span></td><td data-v="2">●●○○○</td><td><span class="pill pill-r">Seixos</span></td><td data-v="2">●●○○○</td><td data-v="4">●●●●○</td><td data-v="5100">R$ 5,1k</td><td data-v="13.3">13h20</td><td data-v="2"><span class="pill pill-g">Tranquilo</span></td><td><span class="pill pill-y">Médio</span></td></tr>
+      <tr><td class="name"><a href="#d9">9. Toscana + Florença 🇮🇹</a></td><td><span class="nota-big">8,9</span></td><td data-v="0">○○○○○</td><td><span class="pill pill-r">—</span></td><td data-v="2">●●○○○</td><td data-v="5">●●●●●</td><td data-v="6600">R$ 6,6k</td><td data-v="14.5">14h30</td><td data-v="3"><span class="pill pill-y">Moderado</span></td><td><span class="pill pill-g">Baixo</span></td></tr>
+      <tr><td class="name"><a href="#d10">10. Açores 🇵🇹</a></td><td><span class="nota-big">8,4</span></td><td data-v="1">●○○○○</td><td><span class="pill pill-r">Escura/pouca</span></td><td data-v="1">●○○○○</td><td data-v="3">●●●○○</td><td data-v="5100">R$ 5,1k</td><td data-v="14.8">14h50</td><td data-v="2"><span class="pill pill-g">Tranquilo</span></td><td><span class="pill pill-r">Alto</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filterCards('all', this)">Top 10</button>
+  <button class="filter-btn" onclick="filterCards('praia', this)">🏖 Praia forte (4+)</button>
+  <button class="filter-btn" onclick="filterCards('agito', this)">🪩 Agito forte (4+)</button>
+  <button class="filter-btn" onclick="filterCards('gastro', this)">🍝 Gastro forte (5)</button>
+  <button class="filter-btn" onclick="filterCards('barato', this)">💰 Destino até R$ 6k p.p.</button>
+  <button class="filter-btn" onclick="filterCards('areia', this)">🏝 Areia boa (+1)</button>
+</div>
+
+<div class="cards-grid" id="cards-grid"></div>
+
+<details class="others">
+  <summary>📦 Outros 13 roteiros avaliados (fora do top 10 para o perfil do trio) — clique para expandir</summary>
+  <div class="others-grid" id="others-grid"></div>
+</details>
+
+<footer>
+  <strong>Metodologia:</strong> voos pesquisados ao vivo no Google Flights e Kayak (10/jun/2026, 1 adulto, business na ida/volta longa, econômica nos internos) ·
+  custo no destino estimado para padrão 3-4★ com divisão de carro/apto por 3 · nota de consenso composta de TripAdvisor, Reddit, fóruns e blogs BR/internacionais ·
+  resumos de vídeo gerados com o "Ask" (Gemini) do YouTube em cada vlog.<br>
+  Fontes principais: TripAdvisor · Reddit · <a href="https://haleyblackall.com/is-puglia-worth-visiting/" target="_blank">Haley Blackall</a> · <a href="https://santorinidave.com/best-greek-islands" target="_blank">Santorini Dave</a> · <a href="https://mypathintheworld.com/is-malta-worth-visiting/" target="_blank">My Path in the World</a> · <a href="https://himara.net/blog/albanian-riviera-vs-montenegro" target="_blank">Himara.net</a> · <a href="https://www.theworldwasherefirst.com/bilbao-vs-san-sebastian/" target="_blank">The World Was Here First</a> · <a href="https://www.saltinourhair.com/portugal/madeira-vs-azores/" target="_blank">Salt in our Hair</a> · <a href="https://www.thetuscanmom.com" target="_blank">The Tuscan Mom</a> · blogs BR (Juju na Trip, Viaje na Viagem, Mala de Aventuras e outros) ·
+  vlogs: Estevam Pelo Mundo, Gabriel Lorenzi, Sonhe Alto Viagens, Caju Turismo, As Viagens de Malini, Comer Rezar Viajar, As Viagens de Antônio, Diego Berlitz.<br>
+  Base de decisão: suas notas no Notion "Viagem Europa diferente — notas de decisão" (atualizada 07/06/2026).<br>
+  💸 <a href="custos-amigas.html">Custos individuais de voos — Tainah (BCN) e Carina (AMS)</a> · ⚔️ <a href="batalha-puglia-grecia.html"><strong>BATALHA: Puglia × Grécia</strong></a> · 🔍 Deep dives: <a href="deepdive-puglia.html">Puglia</a> · <a href="deepdive-ciclades.html">Cíclades</a> · <a href="deepdive-sicilia.html">Sicília</a> · <a href="deepdive-montenegro-albania.html">Montenegro+Albânia</a>
+</footer>
+
+<script>
+const D = [
+{
+  id:'d1', rank:1, nota:'9,0', name:'Puglia — Polignano, Monopoli, Ostuni, Alberobello', country:'🇮🇹 Sul da Itália', highlight:true,
+  img:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/70044_Polignano_A_Mare_BA%2C_Italy_-_panoramio_%284%29.jpg/1280px-70044_Polignano_A_Mare_BA%2C_Italy_-_panoramio_%284%29.jpg',
+  tagline:'O equilíbrio mais redondo para vocês 3: mar quente, cidades cinematográficas, a melhor comida barata da Itália — e setembro é O mês.',
+  praia:5, agito:3, gastro:5, custoNum:6300, areiaBoa:true, dive:'deepdive-puglia.html',
+  sand:'🏝 <strong>Areia: BOA (+1)</strong> — no Salento: Pescoluse ("Maldivas do Salento"), Punta Prosciutto, Torre Lapillo. Polignano/Monopoli são pedra/cascalho — o lado areia fica a 1h30-2h ao sul.',
+  fit:[['Praia','●●●●● 4+1'],['Agito','●●●○○'],['Gastro','●●●●●'],['Custo 8d','R$ 6,3k']],
+  custo:[['Hotel/masseria 3-4★ (÷2 quartos)','~€55/noite p.p.'],['Comida + vinho (excelente e barata)','~€45/dia'],['Carro alugado ÷3 + combustível','~€15/dia p.p.'],['Extras (praias, vinícolas, passeios)','~€10/dia']],
+  total:'R$ 6.300 (€1.050)',
+  pros:['Polignano a Mare + Monopoli + Ostuni: visual icônico em distâncias curtas','Comida excepcional e barata (orecchiette, burrata, focaccia barese)','Setembro = mar ~25°C, vindima, preços caindo, multidão de agosto foi embora','Masseria (fazenda histórica) = experiência única para o grupo','Suas anotações do Notion já apontavam Puglia + setembro'],
+  cons:['Carro é obrigatório — estradas estreitas, estacionar é difícil','Praias famosas lotam e muitas são de pedra/plataforma','Vida noturna é charme + bares, não balada (agito moderado)','Pouco inglês fora do circuito'],
+  reviews:'Consenso forte: “worth it, sem dúvida” — beleza + comida + preço justos; ressalvas universais: precisa de carro e Alberobello é turística. TripAdvisor: Centro Storico de Polignano 4,7/5 (4,4 mil avaliações).',
+  fontes:'TripAdvisor · Reddit r/ItalyTravel · Haley Blackall · Sophie Allegra · Juju na Trip · Viaje na Viagem · dica salva no seu Notion (Sezon by SZ)',
+  vlogQuote:'“A Puglia é um destino incrível e em alta, mas julho/agosto é caótico e muito caro — setembro é fortemente recomendado. Polignano, Alberobello e Lecce são lindas, mas as praias famosas superlotam e a maioria é de pedra, não areia. Com amigos, dividir carro e hospedagem derruba o custo.”',
+  vlogCreator:'Resumo IA (YouTube Ask) do vlog de Gabriel Lorenzi — Dicas de Viagem (BR)',
+  video:'GX48pVdvl8k',
+  why:'Maior fit conjunto: gastronomia 10/10 para vocês, praia suficiente, charme que nenhuma das três conhece. Agito existe (Bari, bares de Polignano) mas é o item mais fraco — compense com 2 noites em Bari.',
+  sept:'Setembro perfeito: vindima, mar quentíssimo, preços de ombro. Reserve masseria com antecedência.',
+  blogs:[['Juju na Trip','https://jujunatrip.com/puglia/'],['Viaje na Viagem','https://www.viajenaviagem.com/destino/puglia/'],['Haley Blackall (EN)','https://haleyblackall.com/is-puglia-worth-visiting/']]
+},
+{
+  id:'d2', rank:2, nota:'9,2', name:'Cíclades — Paros + Naxos (+ Mykonos opcional)', country:'🇬🇷 Grécia', highlight:true, novo:true,
+  img:'https://upload.wikimedia.org/wikipedia/commons/9/90/Naousa_beach.jpg',
+  tagline:'A aposta nova que faltava na sua lista: o melhor combo praia + agito + charme da Europa em setembro — feito sob medida para trio de amigos.',
+  praia:5, agito:4, gastro:4, custoNum:6900, areiaBoa:true, dive:'deepdive-ciclades.html',
+  sand:'🏝 <strong>Areia: TOP (+1)</strong> — dourada de verdade: Plaka e Agios Prokopios (Naxos, km de areia), Chrisi Akti e Santa Maria (Paros). O melhor pacote de areia do top 10.',
+  fit:[['Praia','●●●●● +1'],['Agito','●●●●○'],['Gastro','●●●●○'],['Custo 8d','R$ 6,9k']],
+  custo:[['Hotel 3-4★ perto de Naoussa/Naxos Town','~€60/noite p.p.'],['Comida + vinho (barato: vinho €3,60)','~€45/dia'],['Ferries Atenas⇄Paros⇄Naxos','~€60-80 total'],['Quadri/carro ÷3 + beach clubs','~€15/dia']],
+  total:'R$ 6.900 (€1.150)',
+  pros:['Paros = eleita o hub perfeito para girls/friends trip: Naoussa tem bares e vida noturna charmosa','Naxos a 30-40 min de ferry: praias de areia dourada + vilarejos de mármore','Setembro = shoulder ideal: mar quente, preços caem, multidão some','Comida e vinho surpreendentemente baratos (vinho €3,60!)','Mykonos a 45min de ferry se quiserem UMA noite de balada lendária'],
+  cons:['Deslocamento mais longo (voo + ferry) que os rivais italianos','Vento meltemi pode soprar em setembro (praias do norte)','Ilhas pequenas: reserve ferry e hotéis bons com antecedência','Atenas merece 1 dia, não mais'],
+  reviews:'Consenso explícito nas comparações de ilhas: “Paros para girls trip / nightlife + vibe; Naxos para praia, comida e autenticidade; as duas juntas = combo ideal de setembro”. Avaliações altíssimas de Naoussa e Kolymbithres.',
+  fontes:'Santorini Dave · Find Us Lost · JetsetChristina · Rick Steves Forum · Travels with Ingrid · TripAdvisor',
+  vlogQuote:'“Estevam ficou encantado com Naxos: autêntica, autossuficiente e fora do circuito padrão. Culinária fresca, hospitalidade e preços acessíveis (vinho a €3,60). Contras: hotel isolado exige carro (~€70/dia). Dicas: reservar a balsa com antecedência e respeitar a siesta (15h-17h30).”',
+  vlogCreator:'Resumo IA (YouTube Ask) do vlog de Estevam Pelo Mundo (BR, 2,28M inscritos)',
+  video:'j772jETDRs4',
+  why:'No papel, é o roteiro que melhor entrega o pedido exato das suas amigas: praia de verdade + agito dosável + gastronomia. Não estava na sua lista original — entra como candidato novo nº1 em fit, nº2 no ranking por logística.',
+  sept:'Setembro = melhor mês das Cíclades. Água no pico do calor, festas ainda vivas em Paros/Mykonos, preços de ombro. Rota aérea via Atenas/Europa ocidental.',
+  blogs:[['Santorini Dave (EN)','https://santorinidave.com/best-greek-islands'],['Find Us Lost (EN)','https://finduslost.com/greek-island-hopping-milos-paros-naxos/'],['Travels with Ingrid (EN)','https://travelswithingrid.com/greece/naxos-vs-paros-vs-milos']]
+},
+{
+  id:'d3', rank:3, nota:'8,8', name:'Sicília — Taormina, Etna, Ortigia, Catânia', country:'🇮🇹 Itália — Ilha',
+  img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Aerial_image_of_the_coast_of_Taormina_%28view_from_the_southeast%29.jpg/1280px-Aerial_image_of_the_coast_of_Taormina_%28view_from_the_southeast%29.jpg',
+  tagline:'Vulcão ativo + teatro grego + mar + a comida mais distinta da Itália. A “White Lotus island” no melhor mês do ano.',
+  praia:5, agito:3, gastro:5, custoNum:6300, areiaBoa:true, dive:'deepdive-sicilia.html',
+  sand:'🏝 <strong>Areia: BOA (+1)</strong> — San Vito Lo Capo (branca, estilo Caribe), Mondello (Palermo) e Fontane Bianche (perto de Siracusa). Isola Bella em Taormina é cascalho — bonita de ver, dura de deitar.',
+  fit:[['Praia','●●●●● 4+1'],['Agito','●●●○○'],['Gastro','●●●●●'],['Custo 8d','R$ 6,3k']],
+  custo:[['Hotel 3-4★ (Ortigia/Catânia; Taormina encarece)','~€60/noite p.p.'],['Comida (arancini a granita de rua = barato)','~€40/dia'],['Carro ÷3 + combustível','~€15/dia p.p.'],['Tour Etna + teatro grego + extras','~€100-150 total']],
+  total:'R$ 6.300 (€1.050)',
+  pros:['Etna de jeep/teleférico: experiência que nenhuma das 3 esqueceria','Taormina (teatro grego com vista pro vulcão) + Isola Bella','Ortigia/Siracusa: aperol na piazza, mercado, vibe noturna charmosa','Arancini, granita, cannoli, pasta alla norma — gastronomia própria','Setembro: mar quente, multidões caem, vindima no Etna'],
+  cons:['Dirigir na Sicília é caótico (consenso universal nos reviews)','Taormina comercial e ainda cheia (efeito White Lotus)','Distâncias grandes: escolha leste (Catânia-Taormina-Siracusa) e ignore Palermo','Cidades grandes são barulhentas e desorganizadas'],
+  reviews:'“Absolutamente worth it” é o consenso — história + comida + paisagem sem equivalente; ressalvas recorrentes: caos urbano, direção agressiva e Taormina lotada. TripAdvisor Isola Bella: ~4,4/5 (9,7 mil avaliações), com minoria achando superestimada.',
+  fontes:'TripAdvisor · Destination Abroad · The Road Reel · Reddit r/sicily · CNN Viagem & Gastronomia · Dani Noce',
+  vlogQuote:'“Priorize um roteiro que comece pelo leste e termine em Palermo. Taormina (cenário de White Lotus) e Ortigia são os destaques para vibe local e gastronomia. Milhas baratearam muito; reserve restaurantes com antecedência. Dicas: água das fontes gratuitas e seguro viagem para os mercados caóticos.”',
+  vlogCreator:'Resumo IA (YouTube Ask) do vlog de Estevam Pelo Mundo (BR) — 1h22 de Sicília',
+  video:'wDAvy6g1aJM',
+  why:'Mais “wow cultural” que Puglia (vulcão + ruínas gregas), mesma força gastronômica, praia um pouco pior e logística um pouco mais cansativa. Se o grupo quer história + drama visual, sobe para nº1.',
+  sept:'Setembro ótimo: ~26-28°C, mar quente, uvas no Etna. Reserve Taormina cedo — ainda é o gargalo de preço.',
+  blogs:[['Ideias na Mala','https://ideiasnamala.com/roteiro-sicilia/'],['360 Meridianos','https://www.360meridianos.com/sicilia-roteiro-de-5-7-e-10-dias/'],['Destination Abroad (EN)','https://destinationabroad.co.uk/is-sicily-worth-visiting/']]
+},
+{
+  id:'d4', rank:4, nota:'8,5', name:'Ibiza + Formentera — closing season', country:'🇪🇸 Baleares',
+  img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Ibiza_Es_Vedr%C3%A0_from_east_asv2023-04_img1.jpg/1280px-Ibiza_Es_Vedr%C3%A0_from_east_asv2023-04_img1.jpg',
+  tagline:'O agito máximo do planeta + a praia mais bonita do Mediterrâneo (Formentera). Setembro = closing parties. Mas é o roteiro mais caro.',
+  praia:5, agito:5, gastro:3, custoNum:11400, areiaBoa:true,
+  sand:'🏝 <strong>Areia: TOP (+1)</strong> — Ses Illetes (Formentera) é areia branca nível Caribe; Las Salinas e Cala Comte completam. Melhor água do Mediterrâneo ocidental.',
+  fit:[['Praia','●●●●● +1'],['Agito','●●●●●'],['Gastro','●●●○○'],['Custo 8d','R$ 11,4k']],
+  custo:[['Hotel 3-4★ em setembro (caro)','~€110/noite p.p.'],['Comida + consumo','~€60/dia'],['Festas/closing: 2-3 ingressos','~€180-400 total'],['Barco Formentera + beach clubs','~€120 total']],
+  total:'R$ 11.400 (€1.900)',
+  pros:['Closing parties de set/out: sets mais longos e emocionais do ano (DC10, Amnesia, Pacha, Ushuaïa)','Formentera de barco: água absurda, nível Caribe','Mar no pico do calor (24-28°C) com menos caos que agosto','Dalt Vila + sunset de São Antônio para equilibrar','Sua própria nota no Notion: 8,5/10 para setembro'],
+  cons:['O mais caro do top 10 (hospedagem + ingressos + consumo)','8 dias inteiros pode saturar — reviews sugerem 4-5 dias','Gastronomia boa porém cara e não é o ponto forte','Escolher festa pelo line-up, senão vira armadilha turística'],
+  reviews:'Consenso da cena: setembro/closing é “o melhor momento do ano” — crowd mais musical, hotéis ~40% mais baratos que agosto, clima ainda perfeito; ingressos €100-180 e consumo interno seguem salgados.',
+  fontes:'Tickets Ibiza · Magic Ibiza · TryIbiza · Reddit r/Ibiza · sua nota no Notion',
+  vlogQuote:'“Ibiza é surreal e vibrante — a energia compensa até para quem não é fã de eletrônica. Ushuaïa e Pacha são os preferidos. É caro em euros, mas o consumo não é tão absurdo com estratégia: esquenta com bebidas de supermercado e ingressos comprados com bastante antecedência.”',
+  vlogCreator:'Resumo IA (YouTube Ask) do vlog de Gabriel Lorenzi — Dicas Barcelona (BR)',
+  video:'WsVBIAJTXxk',
+  why:'Se “agito” for o critério nº1 das amigas, é imbatível — nada na Europa chega perto. Ideia dos reviews + suas notas: 4-5 noites Ibiza + combinar com Mallorca/BCN, ou aceitar 8 dias caros. Cheque o line-up de 12-20/set ANTES de comprar.',
+  sept:'12-20/set = fim de temporada com tudo aberto; closings grandes concentram-se no fim de set/out — confirme o calendário do ano.',
+  blogs:[['Tickets Ibiza — calendário (EN)','https://ticketsibiza.com/ibiza-closing-parties/'],['Magic Ibiza (EN)','https://magic-ibiza.com/blog/ibiza-closing-parties/'],['Fer Rebello (BR)','https://www.youtube.com/watch?v=or7Q6gZV6qI']]
+},
+{
+  id:'d5', rank:5, nota:'7,8', name:'Malta + Gozo + Comino', country:'🇲🇹 Malta',
+  img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/St_Sebastian_Curtain_%28cropped%29.jpg/1280px-St_Sebastian_Curtain_%28cropped%29.jpg',
+  tagline:'Lagunas azul-neon, 3.000 anos de história, inglês oficial e festa em St Julian\'s — tudo compacto e barato. Mas é a mais lotada/construída do top 10.',
+  praia:4, agito:4, gastro:3, custoNum:5400, areiaBoa:false,
+  sand:'🏝 <strong>Areia: POUCA (sem +1)</strong> — maioria é rocha/plataforma de mergulho; areia só em Golden Bay, Mellieħa Bay e Ramla (vermelha, em Gozo). Blue Lagoon = água incrível, mas quase sem faixa de areia.',
+  fit:[['Praia','●●●●○'],['Agito','●●●●○'],['Gastro','●●●○○'],['Custo 8d','R$ 5,4k']],
+  custo:[['Hotel 3-4★ (St Julian\'s/Sliema)','~€50/noite p.p.'],['Comida (pastizzi <€1; jantar €20-25)','~€35/dia'],['Bolt/Uber + ferry Gozo €4,65','~€8/dia'],['Quadriciclo Gozo + barco Comino','~€80-100 total']],
+  total:'R$ 5.400 (€900)',
+  pros:['Blue Lagoon (Comino) + St Peter\'s Pool: águas mais fotogênicas do Mediterrâneo','Valletta + Mdina: cidades-cenário (Game of Thrones, Gladiador)','St Julian\'s/Paceville: vida noturna de verdade para o trio','Inglês oficial + sem carro necessário + custo baixo','Gozo de quadriciclo = dia mais divertido da viagem'],
+  cons:['Ilha principal superconstruída e densamente lotada (consenso forte)','Blue Lagoon vira “lata de sardinha” em horário de pico','Transporte público ruim — dependam de Bolt/Uber','Praias de areia são poucas e pequenas'],
+  reviews:'“Vale a pena, MAS ajuste expectativas”: história/arquitetura/custo ganham elogios; over-tourism e overdevelopment são a queixa nº 1. Setembro ainda é alta temporada — vá cedo às lagunas.',
+  fontes:'My Path in the World (22 prós/contras) · Drifter Planet · IslaGuru (reviews agregados) · Goats on the Road · Reddit r/malta',
+  vlogQuote:'“Malta é incrível no custo-benefício, com águas surreais (Blue Lagoon) e cidades muradas. Atenção: transporte público ineficiente — use Bolt/Uber. Destaques: St Peter\'s Pool, Blue Grotto e Gozo de quadriciclo (~€50/4h). Para vida noturna com amigos: fiquem em St Julian\'s.”',
+  vlogCreator:'Resumo IA (YouTube Ask) do vlog de Sonhe Alto Viagens (BR, 352K inscritos)',
+  video:'nqoUw3mqcIQ',
+  why:'O pacote mais “fácil” do top 10: sem carro, inglês, barato, praia + festa + história no mesmo raio de 20km. O risco é sensação de lotação — se o grupo odeia multidão, desça este para 7º-8º.',
+  sept:'Set ainda quente (~28°C) e movimentado; lagunas acessíveis cedo. Combina com Sicília (ferry 1h45 de Pozzallo) se quiserem 2-em-1.',
+  blogs:[['Mala de Aventuras','https://www.maladeaventuras.com/roteiro-malta/'],['My Path in the World (EN)','https://mypathintheworld.com/is-malta-worth-visiting/'],['IslaGuru — reviews (EN)','https://www.islaguru.com/articles/malta-travel-reviews']]
+},
+{
+  id:'d6', rank:6, nota:'8,3', name:'Montenegro + Riviera Albanesa', country:'🇲🇪 Montenegro / 🇦🇱 Albânia',
+  img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/20090719_Crkva_Gospa_od_Zdravlja_Kotor_Bay_Montenegro.jpg/1280px-20090719_Crkva_Gospa_od_Zdravlja_Kotor_Bay_Montenegro.jpg',
+  tagline:'O visual mais dramático da lista (Kotor) + praias albanesas com a água mais clara do Adriático — gastando metade. O preço é a logística.',
+  praia:4, agito:3, gastro:3, custoNum:4200, areiaBoa:false, dive:'deepdive-montenegro-albania.html',
+  sand:'🏝 <strong>Areia: PARCIAL (sem +1 cheio)</strong> — Ksamil (Albânia) tem areia branca de cartão-postal (pequena e disputada); Dhërmi/Gjipe são cascalho branco; em Montenegro, Jaz e Mogren misturam areia e cascalho.',
+  fit:[['Praia','●●●●○'],['Agito','●●●○○'],['Gastro','●●●○○'],['Custo 8d','R$ 4,2k']],
+  custo:[['Hotel 3-4★ (Kotor €55-70; Albânia €30-45 p.p.)','~€45/noite p.p.'],['Comida (jantar p/ 3 por €25-35 na Albânia)','~€25/dia'],['Carro alugado ÷3 + combustível + fronteira','~€15/dia p.p.'],['Passeios (barco, fortaleza, Blue Eye)','~€60-80 total']],
+  total:'R$ 4.200 (€700) — o mais barato',
+  pros:['Baía de Kotor: candidata a visual mais bonito da viagem inteira','Em setembro os iates/cruzeiros diminuem e o mar segue a 23°C','Riviera albanesa (Ksamil, Dhërmi, Gjipe): água mais clara que Montenegro, quase sem estrutura — e por isso especial','Custo diário ridículo: jantar para 3 por ~€25-35 na Albânia','História de viagem que ninguém do seu círculo tem'],
+  cons:['Voo internacional mais caro e com mais conexões do top 10','Sem voo direto p/ Lisboa no dia 20 (1 parada, 12-16h)','Cruzeiros imprevisíveis podem lotar Kotor num estalo','Estradas albanesas exigem paciência; agito é local, não clubber'],
+  reviews:'Kotor: “ainda vale muito, em setembro fica ideal” — mas atenção a dias de cruzeiro; comparativos Albânia × Montenegro dão vantagem à Albânia em praia/preço e a Montenegro em estrutura. €60-90/dia vs €110-170/dia.',
+  fontes:'Himara.net (comparativo) · Sunshine Seeker · The World Travel Index · Tara O\'Reilly · Pommie Travels',
+  vlogQuote:'“Um paraíso europeu acessível: montanhas majestosas + mar deslumbrante + história medieval. Kotor e a Ilha de Nossa Senhora das Rochas são os pontos altos, com comida e cerveja bem mais baratas que na Croácia. Prepare o fôlego: a subida à fortaleza é puxada — façam no fim da tarde.”',
+  vlogCreator:'Resumo IA (YouTube Ask) do vlog da Caju Turismo (BR)',
+  video:'2J656RIbV3Y',
+  why:'O “diferente de verdade” da lista — e o único que entrega praia top + custo diário baixo. Mas o trio precisa topar logística: carro alugado, fronteira, e o voo mais caro. Dado que suas amigas moram na Europa (voos baratos p/ Tivat), o custo alto é só o SEU.',
+  sept:'Setembro é considerado O melhor mês de Montenegro: mar quente, multidão de agosto some, preços caem.',
+  blogs:[['As Passeadeiras (BR, amigas)','https://aspasseadeiras.com.br/albania-e-montenegro-viagem-com-amigas/'],['Himara.net (EN)','https://himara.net/blog/albanian-riviera-vs-montenegro'],['Sunshine Seeker (EN)','https://www.sunshineseeker.com/destinations/kotor/']]
+},
+{
+  id:'d7', rank:7, nota:'8,7', name:'País Basco — San Sebastián, Bilbao, Rioja', country:'🇪🇸 Norte da Espanha',
+  img:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/San_Sebasti%C3%A1n_-_Ayuntamiento_10.jpg/1280px-San_Sebasti%C3%A1n_-_Ayuntamiento_10.jpg',
+  tagline:'A melhor experiência gastronômica da Europa (pintxos + Michelin + vindima na Rioja) com praia urbana linda. “Nem parece Espanha” — bom argumento para a amiga de BCN.',
+  praia:4, agito:4, gastro:5, custoNum:6600, areiaBoa:true,
+  sand:'🏝 <strong>Areia: BOA urbana (+1)</strong> — La Concha e Zurriola são areia fina e limpa no meio da cidade. Detalhe: água do Atlântico fria (~20°C) — praia de toalha e caminhada, não de mar morninho.',
+  fit:[['Praia','●●●●○ 3+1'],['Agito','●●●●○'],['Gastro','●●●●●'],['Custo 8d','R$ 6,6k']],
+  custo:[['Hotel 3-4★ (SS cara; Bilbao alivia)','~€70/noite p.p.'],['Pintxos + jantares (1 especial incluso)','~€55/dia'],['Carro p/ Rioja ÷3 (2-3 dias)','~€10/dia p.p.'],['Vinícolas + Guggenheim + extras','~€80 total']],
+  total:'R$ 6.600 (€1.100)',
+  pros:['Bar hopping de pintxos na Parte Vieja = agito gastronômico perfeito para o trio','Mais estrelas Michelin por m² do mundo (só perde p/ Kyoto)','La Concha: praia urbana mais bonita da Europa','Setembro = vindima na Rioja (1h30): vinícolas em festa','Voo interno p/ Lisboa por R$ 233 — o mais barato de todos'],
+  cons:['San Sebastián é cara (hospedagem é o vilão)','Risco real de chuva/tempo fechado em setembro','Praia é urbana e fria — não é “férias de biquíni”','Amiga de Barcelona pode sentir “Espanha de novo” (mesmo sendo outra Espanha)'],
+  reviews:'Consenso: “imperdível para quem ama comida” — pintxos €1-3, cidade compacta e segura; críticas: preços de hotel, multidão na Parte Vieja e pouca coisa “para fazer” além de comer e praia. Bilbao = mais barata e com Guggenheim.',
+  fontes:'The World Was Here First · Geographical Cure · Budget Your Trip · Rick Steves Forum · TripAdvisor La Concha ~4,8/5',
+  vlogQuote:'“A criadora ficou encantada: identidade cultural, língua e culinária próprias — algo à parte da Espanha. Prós: receptividade, produtos impecáveis, sociedades gastronômicas (txokos). Atenção: a cultura pode parecer fechada no início. O coração da viagem é comer: pintxos, sidrarias com chuleta, frutos do mar em Getaria.”',
+  vlogCreator:'Resumo IA (YouTube Ask) do vlog de As Viagens de Malini (BR)',
+  video:'e2IH-xNBZJw',
+  why:'Se a régua for gastronomia + bar hopping (agito “adulto”), é o nº 1 disparado. Praia e calor são o ponto fraco. Teste decisivo: a amiga de BCN topa “Espanha de novo”? Se sim, sobe; se não, desce.',
+  sept:'Setembro: film festival em SS (gente bonita + agito, hotéis +caros na semana do festival), vindima na Rioja, ~21°C com chuva possível.',
+  blogs:[['Jessica Amaral (BR)','https://www.jessicaamaral.com.br/post/roteiro-de-5-dias-pelo-norte-da-espanha-bilbao-san-sebastian-e-santander'],['The World Was Here First (EN)','https://www.theworldwasherefirst.com/bilbao-vs-san-sebastian/'],['Buenas Dicas (BR)','https://www.buenasdicas.com/pais-basco-13834/']]
+},
+{
+  id:'d8', rank:8, nota:'8,6', name:'Madeira — Funchal, Arieiro, Fanal, Porto Moniz', country:'🇵🇹 Portugal Atlântico',
+  img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Pico_do_Areeiro%2C_2025.jpg/1280px-Pico_do_Areeiro%2C_2025.jpg',
+  tagline:'O “Havaí da Europa”: natureza que esmaga qualquer outra ilha da lista, comida boa e barata — mas praia fraca e agito leve. O roteiro mais barato.',
+  praia:2, agito:2, gastro:4, custoNum:5100, areiaBoa:false,
+  sand:'🏝 <strong>Areia: NÃO (sem +1)</strong> — praias de seixos vulcânicos e piscinas naturais de lava. Areia de verdade só em Porto Santo (ferry 2h15) ou na pequena Calheta (areia importada).',
+  fit:[['Praia','●●○○○'],['Agito','●●○○○'],['Gastro','●●●●○'],['Custo 8d','R$ 5,1k']],
+  custo:[['Hotel 3-4★ (Funchal)','~€50/noite p.p.'],['Comida boa e barata (TheFork até -50%)','~€35/dia'],['Carro ÷3 + combustível','~€12/dia p.p.'],['Teleférico, piscinas, Porto Santo opcional','~€60-120 total']],
+  total:'R$ 5.100 (€850)',
+  pros:['Pico do Arieiro acima das nuvens + Fanal: cenários únicos no mundo','Comida ótima e barata; TheFork dá até -50% em bons restaurantes','Funchal tem cena de bares razoável (Rua de Santa Maria)','Setembro = mar no pico do calor + menos chuva do ano','Logística imbatível: voo mais curto + interno de R$ 275'],
+  cons:['Praias de seixos (areia mesmo, só indo a Porto Santo de ferry)','Vida noturna leve — não é destino de festa','Clima muda em minutos: mirante pode estar nas nuvens','Sem carro não funciona; serra exige confiança ao volante'],
+  reviews:'Comparativos Madeira × Açores dão Madeira como “mais social, mais sol, mais infraestrutura, com nightlife razoável em Funchal” — e nota alta geral. Levadas e mirantes ~4,8/5 no TripAdvisor; queixa universal: tempo instável e praia fraca.',
+  fontes:'Salt in our Hair · Quest Travel Adventures · Say Yes to Madeira · Enjoy Travel · TripAdvisor',
+  vlogQuote:'“Espetacular: natureza bruta e trilhas inesquecíveis (Arieiro e Fanal imperdíveis). Contra sincero: clima instável pode fechar atrações e mirantes. Custo muito atrativo, comida de qualidade e bem servida. Essencial: carro alugado e roteiro com folga para remanejar pelo tempo; usem TheFork para economizar.”',
+  vlogCreator:'Resumo IA (YouTube Ask) do vlog de Comer Rezar Viajar (BR)',
+  video:'PsUsuYwBvpw',
+  why:'O melhor custo-benefício absoluto e o menor cansaço logístico (termina a 1h45 de Lisboa). Mas atende mal 2 dos 3 pedidos das amigas (praia/agito). Funciona melhor como “plano natureza” se o grupo mudar de critério.',
+  sept:'Setembro é tecnicamente o melhor mês da Madeira: mar 23-24°C, flora viva, menos chuva.',
+  blogs:[['Comer Rezar Viajar (BR)','https://www.youtube.com/watch?v=PsUsuYwBvpw'],['Salt in our Hair (EN)','https://www.saltinourhair.com/portugal/madeira-vs-azores/'],['Say Yes to Madeira (EN)','https://sayyestomadeira.com/en/madeira-or-azores/']]
+},
+{
+  id:'d9', rank:9, nota:'8,9', name:'Toscana — Florença, Chianti, Val d\'Orcia (vindima)', country:'🇮🇹 Itália',
+  img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/I_cipressi_della_Val_D%27Orcia.jpg/1280px-I_cipressi_della_Val_D%27Orcia.jpg',
+  tagline:'Setembro é A época da Toscana: vindima, festas de colheita, luz dourada. Gastronomia e vinho 10/10 — mas zero praia e agito baixo.',
+  praia:0, agito:2, gastro:5, custoNum:6600, areiaBoa:false,
+  sand:'🏝 <strong>Areia: sem praia no roteiro (sem +1)</strong> — a costa da Maremma (areia) fica a 2h+ e não compensa no roteiro de 8 dias. Aqui a "água" é piscina de agriturismo.',
+  fit:[['Praia','○○○○○'],['Agito','●●○○○'],['Gastro','●●●●●'],['Custo 8d','R$ 6,6k']],
+  custo:[['Agriturismo/hotel 3-4★ com piscina','~€65/noite p.p.'],['Comida + vinho (Brunello na fonte)','~€50/dia'],['Carro ÷3 + combustível + ZTL','~€15/dia p.p.'],['Degustações + Uffizi + extras','~€100-150 total']],
+  total:'R$ 6.600 (€1.100)',
+  pros:['Vindima em setembro: vinícolas em festa, colheita, festivais de vila','Val d\'Orcia + Pienza + Montalcino: a paisagem mais fotografada da Itália','Agriturismo com piscina = experiência de grupo perfeita','Florença na chegada/saída: Uffizi, aperitivo no Oltrarno','Comida e vinho insuperáveis no custo (Brunello na fonte)'],
+  cons:['Sem praia nenhuma — falha direta no pedido das amigas','Setembro AINDA é alta temporada: Florença lotada, preços altos','Agito = jantares longos e wine bars, não balada','Carro obrigatório; estacionar em vilas medievais irrita'],
+  reviews:'Unânime que setembro/vindima é o auge (“mild days, vineyards glowing”), com a ressalva igualmente unânime: multidões e preços de alta temporada. Val d\'Orcia ~4,8/5 nas avaliações.',
+  fontes:'Visit Tuscany · Into the Vineyard · The Tuscan Mom · Cultured Voyages · TripAdvisor',
+  vlogQuote:'“O Val d\'Orcia é a região mais bonita da Toscana: paisagens cinematográficas e atendimento acolhedor em vinícolas familiares. Estadia em castelo com ótimo custo-benefício. Desafios: estacionar em Montalcino e clima que muda. Dicas: carro alugado, vinícolas pequenas (Villa i Tassi) e pôr do sol na Capella di Vitaleta.”',
+  vlogCreator:'Resumo IA (YouTube Ask) do vlog de Diego Berlitz (BR)',
+  video:'bp7PyaOs67A',
+  why:'O roteiro mais “anote na memória afetiva” — vindima só existe 1x/ano e setembro é exatamente o mês. Mas sacrifica praia e balada; só sobe no ranking se o grupo trocar “agito” por “vinho”.',
+  sept:'Vindima de meados de set a início de out: feste dell\'uva, colheita aberta a visitantes, luz de outono.',
+  blogs:[['Melhores Destinos (BR)','https://guia.melhoresdestinos.com.br/roteiro-toscana-italia.html'],['Visit Tuscany (EN)','https://www.visittuscany.com/en/ideas/grape-harvest-time-in-tuscany/'],['The Tuscan Mom (EN)','https://thetuscanmom.com/tuscany-in-fall/']]
+},
+{
+  id:'d10', rank:10, nota:'8,4', name:'Açores — São Miguel (+ Terceira)', country:'🇵🇹 Portugal Atlântico',
+  img:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Lagoa_das_Sete_Cidades3.jpg/1280px-Lagoa_das_Sete_Cidades3.jpg',
+  tagline:'Sua decisão provisória no Notion — e segue única no mundo (caldeiras, termas, baleias). Mas para ESTE trio com ESTE pedido, é a que menos entrega.',
+  praia:1, agito:1, gastro:3, custoNum:5100, areiaBoa:false,
+  sand:'🏝 <strong>Areia: QUASE NADA (sem +1)</strong> — poucas praias de areia escura vulcânica (Santa Bárbara, Mosteiros), água ~22°C e mar de oceano aberto. Aqui o banho é nas termas quentes, não no mar.',
+  fit:[['Praia','●○○○○'],['Agito','●○○○○'],['Gastro','●●●○○'],['Custo 8d','R$ 5,1k']],
+  custo:[['Hotel 3-4★ (Ponta Delgada)','~€50/noite p.p.'],['Comida (cozido das Furnas, peixe)','~€35/dia'],['Carro ÷3 (€55-60/dia)','~€18/dia p.p.'],['Termas €5-8 + whale watching ~€60','~€100 total']],
+  total:'R$ 5.100 (€850)',
+  pros:['Sete Cidades + Furnas + Lagoa do Fogo: cenários que não existem em outro lugar','Termas quentes na floresta (Poça da Dona Beija, €8)','Whale watching de nível mundial ainda bom em setembro','Barato, seguro, sem multidão — “reset mental” garantido','Encaixe perfeito com Lisboa no dia 20'],
+  cons:['Clima imprevisível MESMO em setembro (consenso: planeje folgas)','Praia de areia quente: quase inexistente','Vida noturna: praticamente zero — falha no pedido de agito','Cozido das Furnas é experiência, mas gastronomia geral é simples'],
+  reviews:'Nota alta universal para natureza/paisagens (4,8/5 em Sete Cidades), e o MESMO aviso em toda fonte: “não confie na previsão, tenha plano B”. Comparativos com Madeira: Açores ganham em natureza crua, perdem em sol, social e nightlife.',
+  fontes:'Salt in our Hair · Unusual Nomad · Cultuga · Viaje na Viagem · TripAdvisor',
+  vlogQuote:'“Os Açores são um refúgio de natureza exuberante — um verdadeiro reset mental. O trunfo é o verde e a ausência de multidões; o contra sincero é o clima extremamente instável, mesmo no verão. Carro ~€55-60/dia, termas a €5. Dica: ignore a previsão, use apps de tempo real e tenha roteiro flexível.”',
+  vlogCreator:'Resumo IA (YouTube Ask) do documentário de As Viagens de Antônio (1,2M views)',
+  video:'bhbZxrRzCGE',
+  why:'Mantido no top 10 por ser SUA escolha provisória e a mais “diferente”. Mas para praia + agito + gastronomia com as amigas, é a última: clima arriscado e noite morta. Sugestão honesta: guarde os Açores para uma viagem sua de natureza, e leve as amigas para o Mediterrâneo.',
+  sept:'Setembro: fim da estação boa, mar 22-23°C, menos cheio. Aceite 1-2 dias de chuva no plano.',
+  blogs:[['Cultuga (BR)','https://www.cultuga.com.br/roteiro-acores-dicas-de-viagem/'],['Viaje na Viagem (BR)','https://www.viajenaviagem.com/madeira-acores-canarias-dicas-roteiros/'],['Salt in our Hair (EN)','https://www.saltinourhair.com/portugal/madeira-vs-azores/']]
+}
+];
+
+const OTHERS = [
+ ['Eslovênia — Bled, Ljubljana, Soča','🇸🇮','Lindíssima e barata de explorar, mas sem praia de verdade e agito só universitário.','Lago com castelo, rio esmeralda, tudo a 2h de carro.'],
+ ['Ístria — Rovinj, Pula','🇭🇷','Croácia não encantou vocês em Dubrovnik; praias de pedra e agito quase nulo.','Rovinj fotogênica, anfiteatro romano sem fila, trufas.'],
+ ['Marrocos Norte — Chefchaouen, Fès','🇲🇦','Trio feminino relatou assédio nas medinas em vários reviews; exige energia de viagem diferente.','Visual e cultura únicos, voo direto RAM, sem visto.'],
+ ['Andaluzia — Sevilha, Granada, Ronda','🇪🇸','Amiga de BCN já conhece bem a Espanha clássica; calor de ~32°C em setembro.','Alhambra + flamenco + tapas seguem espetaculares.'],
+ ['Norte de Portugal — Douro, Guimarães','🇵🇹','Vocês já conhecem Porto; pouco agito e zero praia.','Vindimas no Douro em setembro são especiais.'],
+ ['Alentejo — Évora, Monsaraz','🇵🇹','Lindo e quente demais, sem noite, sem praia — ideal para casal, não para o trio.','Vinho, céu estrelado (dark sky), vilas medievais.'],
+ ['Canárias — Lanzarote, La Gomera','🇪🇸','Turismo de massa britânico/alemão; menos charme para o pedido do grupo.','Paisagem vulcânica única, clima garantido.'],
+ ['Escócia — Highlands, Skye','🇬🇧','12-14°C e chuva em setembro — você vetou frio.','Visual dramático, Edimburgo incrível.'],
+ ['Emília-Romanha — Bolonha, Módena','🇮🇹','Gastronomia 10/10 mas sem praia e com agito só universitário.','Bolonha autêntica, parmesão/balsâmico na fonte.'],
+ ['Kosovo + Macedônia — Prizren, Ohrid','🇽🇰🇲🇰','Logística aérea ruim de SP e conforto baixo para o padrão do grupo.','Baratíssimo e genuinamente fora do radar.'],
+ ['Nápoles + Costa Amalfitana','🇮🇹','VETADO: sua amiga da Holanda não iria para Nápoles.','Pizza, Pompéia e Positano ficam para outra vez.'],
+ ['Veneza + Dolomitas','🇮🇹','Veneza segue lotada/cara em set; Dolomitas = montanha, não praia/festa.','“Precisa ir 1x na vida” — melhor em viagem própria.'],
+ ['Ligúria — Cinque Terre, Portofino','🇮🇹','Mainstream, cara e ainda movimentada em setembro; praias pequenas.','Visual icônico, Gênova subestimada.']
+];
+
+function buildCard(d){
+  const custoRows = d.custo.map(c=>`<div class="cost-row"><span>${c[0]}</span><span>${c[1]}</span></div>`).join('');
+  const prosHtml = d.pros.map(p=>`<li>${p}</li>`).join('');
+  const consHtml = d.cons.map(c=>`<li>${c}</li>`).join('');
+  const fitHtml = d.fit.map(f=>`<div class="fit-item"><div class="fl">${f[0]}</div><div class="fv">${f[1]}</div></div>`).join('');
+  const blogHtml = d.blogs.map(b=>`<a class="blog-link" href="${b[1]}" target="_blank">${b[0]}</a>`).join('');
+  return `
+  <div class="card${d.highlight?' highlight':''}" id="${d.id}" data-praia="${d.praia}" data-agito="${d.agito}" data-gastro="${d.gastro}" data-custo="${d.custoNum}" data-areia="${d.areiaBoa?1:0}">
+    <div class="card-header" style="background-image:url('${d.img}')">
+      <span class="rank-badge">${d.rank}</span>
+      ${d.novo?'<span class="novo-badge">Novo na lista</span>':''}
+      <span class="nota-badge"><small>consenso</small>${d.nota}</span>
+      <div class="country">${d.country}</div>
+      <h2>${d.name}</h2>
+    </div>
+    <div class="card-body">
+      <p class="tagline">${d.tagline}</p>
+      <div class="fit-grid">${fitHtml}</div>
+      <div class="sand-note">${d.sand}</div>
+      <div class="cost-box">
+        <div class="cost-title">💰 Custo no destino — 8 dias, por pessoa (voos nas páginas de custos)</div>
+        ${custoRows}
+        <div class="cost-total"><span>Total no destino p.p.</span><span>${d.total}</span></div>
+      </div>
+      <div class="pros-cons">
+        <div class="pros"><div class="pros-title">Prós (consenso)</div><ul>${prosHtml}</ul></div>
+        <div class="cons"><div class="cons-title">Contras (consenso)</div><ul>${consHtml}</ul></div>
+      </div>
+      <div class="reviews-box"><strong>O que dizem os reviews:</strong> ${d.reviews}<div class="reviews-fontes">Fontes: ${d.fontes}</div></div>
+      <div class="vlog-box">
+        <div class="vlog-title">🎥 Vlog decisivo — resumo do vídeo</div>
+        <div class="vlog-quote">${d.vlogQuote}</div>
+        <div class="vlog-creator">${d.vlogCreator}</div>
+        <div class="video-embed"><iframe loading="lazy" src="https://www.youtube.com/embed/${d.video}" title="vlog" allowfullscreen></iframe></div>
+      </div>
+      <div class="why-you"><strong>Para vocês 3:</strong> ${d.why}</div>
+      <div class="sept-note">🗓 <strong>Setembro:</strong> ${d.sept}</div>
+      ${d.dive?`<a class="dive-btn" href="${d.dive}">🔍 Deep dive completo — opiniões de 7+ vídeos e guia detalhado →</a>`:''}
+      <div class="links-section">${blogHtml}</div>
+    </div>
+  </div>`;
+}
+
+document.getElementById('cards-grid').innerHTML = D.map(buildCard).join('');
+document.getElementById('others-grid').innerHTML = OTHERS.map(o=>`
+  <div class="mini-card"><div class="mc-country">${o[1]}</div><h3>${o[0]}</h3>
+  <div class="mc-why">✗ Por que ficou fora: ${o[2]}</div><div class="mc-desc">✓ O que tem de bom: ${o[3]}</div></div>`).join('');
+
+function filterCards(type, btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#cards-grid .card').forEach(c=>{
+    let show = true;
+    if(type==='praia') show = parseInt(c.dataset.praia)>=4;
+    else if(type==='agito') show = parseInt(c.dataset.agito)>=4;
+    else if(type==='gastro') show = parseInt(c.dataset.gastro)>=5;
+    else if(type==='barato') show = parseInt(c.dataset.custo)<=6000;
+    else if(type==='areia') show = c.dataset.areia==='1';
+    c.classList.toggle('hidden', !show);
+  });
+}
+
+let sortDir = {};
+function sortDash(col, numeric){
+  const tbody = document.querySelector('#dashTable tbody');
+  const rows = Array.from(tbody.rows);
+  sortDir[col] = !sortDir[col];
+  rows.sort((a,b)=>{
+    if(numeric){
+      const get = r => {
+        const cell = r.cells[col];
+        const dv = cell.dataset.v || (cell.querySelector('[data-v]') && cell.querySelector('[data-v]').dataset.v);
+        if(dv !== undefined && dv !== null && dv !== '') return parseFloat(dv);
+        return parseFloat(cell.textContent.replace(/[^0-9.,]/g,'').replace(',','.')) || 0;
+      };
+      return sortDir[col] ? get(b)-get(a) : get(a)-get(b);
+    }
+    const va = a.cells[col].textContent.trim(), vb = b.cells[col].textContent.trim();
+    return sortDir[col] ? vb.localeCompare(va) : va.localeCompare(vb);
+  });
+  rows.forEach(r=>tbody.appendChild(r));
+}
+</script>
+</body>
+</html>
