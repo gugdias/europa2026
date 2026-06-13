@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📋 Reservas Passo a Passo — Grécia & Puglia (Set/2026)</title>
+<style>
+:root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--gold:#d4af37;--gold2:#f0d060;--green:#3fb950;--red:#f85149;--blue:#58a6ff;--purple:#bc8cff;--ita:#3fb950;--gre:#58a6ff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;line-height:1.6;padding-bottom:3rem}
+header{text-align:center;padding:2rem 1rem 1.2rem;border-bottom:1px solid var(--border);background:linear-gradient(135deg,#0d1117,#1a2332)}
+h1{color:var(--gold2);font-size:1.6rem;line-height:1.2}
+.back{color:var(--blue);font-size:.85rem;text-decoration:none}
+.sub{color:var(--muted);font-size:.85rem;max-width:820px;margin:.5rem auto 0}
+.wrap{max-width:1050px;margin:1.4rem auto;padding:0 1.2rem}
+a{color:var(--blue)}
+h2{color:var(--gold2);font-size:1.15rem;margin:2rem 0 .7rem;padding-top:.5rem;border-top:1px solid var(--border)}
+h2:first-of-type{border-top:none}
+h3{font-size:.95rem;color:#fff;margin:1.1rem 0 .4rem}
+
+/* tabs */
+.dest-tabs{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin:1rem 0 1.4rem}
+.dest-tab{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:10px 22px;border-radius:14px;cursor:pointer;font-size:1rem;font-weight:700;transition:all .2s}
+#tab-gr.active{background:var(--gre);color:#0d1117;border-color:var(--gre)}
+#tab-pu.active{background:var(--ita);color:#0d1117;border-color:var(--ita)}
+.dest-pane{display:none}
+.dest-pane.on{display:block}
+
+/* step */
+.step{display:grid;grid-template-columns:48px 1fr;gap:.9rem;margin-bottom:.8rem}
+.snum{width:40px;height:40px;border-radius:50%;font-weight:800;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.gr .snum{background:rgba(88,166,255,.15);color:var(--gre);border:1px solid rgba(88,166,255,.4)}
+.pu .snum{background:rgba(63,185,80,.15);color:var(--ita);border:1px solid rgba(63,185,80,.4)}
+.sbody{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:.9rem 1.1rem}
+.stitle{font-size:.95rem;font-weight:700;color:#fff;margin-bottom:4px}
+.sdesc{font-size:.83rem;color:var(--text)}
+.swhen{font-size:.72rem;font-weight:700;color:var(--gold2);margin-bottom:4px}
+.smeta{font-size:.76rem;color:var(--muted);margin-top:6px;border-top:1px dashed var(--border);padding-top:6px}
+.sbtn{display:inline-block;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0d1117;font-weight:800;font-size:.78rem;padding:6px 14px;border-radius:9px;text-decoration:none;margin-top:7px;margin-right:5px}
+.sbtn:hover{filter:brightness(1.1)}
+.sbtn.sec{background:rgba(88,166,255,.15);color:var(--blue);border:1px solid rgba(88,166,255,.4)}
+.pu .sbtn.sec{background:rgba(63,185,80,.1);color:var(--ita);border:1px solid rgba(63,185,80,.4)}
+
+/* hotel cards */
+.hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:.75rem;margin:.7rem 0}
+.hcard{background:#1a2230;border:1px solid var(--border);border-radius:12px;padding:.85rem 1rem;font-size:.82rem}
+.hcard.top{border-color:var(--gold);background:rgba(212,175,55,.07)}
+.hname{font-weight:800;color:#fff;font-size:.9rem}
+.hstars{color:var(--gold2);font-size:.75rem;margin-bottom:3px}
+.hprice{font-size:.8rem;color:var(--green);font-weight:700;margin:4px 0}
+.hfeats{font-size:.76rem;color:var(--muted);margin:3px 0}
+.hrating{font-size:.75rem;color:var(--purple)}
+.hbtn{display:inline-block;margin-top:7px;background:rgba(88,166,255,.12);border:1px solid rgba(88,166,255,.3);color:var(--blue);font-size:.73rem;font-weight:700;padding:4px 11px;border-radius:8px;text-decoration:none}
+.hbtn:hover{background:rgba(88,166,255,.25)}
+.pu .hbtn{background:rgba(63,185,80,.1);border-color:rgba(63,185,80,.3);color:var(--ita)}
+.top-badge{background:var(--gold);color:#0d1117;font-size:.62rem;font-weight:800;padding:2px 8px;border-radius:8px;margin-left:6px;vertical-align:middle}
+
+/* warning / tip boxes */
+.warn{background:rgba(248,81,73,.07);border:1px solid rgba(248,81,73,.3);border-radius:11px;padding:.75rem 1rem;font-size:.82rem;margin:.6rem 0}
+.warn strong{color:var(--red)}
+.tip{background:rgba(212,175,55,.07);border:1px solid rgba(212,175,55,.3);border-radius:11px;padding:.75rem 1rem;font-size:.82rem;margin:.6rem 0}
+.tip strong{color:var(--gold2)}
+
+/* checklist */
+.checks{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:4px 1rem;margin:.5rem 0}
+.checks li{font-size:.82rem;padding:3px 0 3px 22px;position:relative}
+.checks li::before{content:'☐';position:absolute;left:0;color:var(--gold2);font-size:.85rem}
+@media(max-width:640px){.checks{grid-template-columns:1fr}.hgrid{grid-template-columns:1fr}}
+
+/* social proof */
+.social-section{background:rgba(88,166,255,.04);border:1px solid rgba(88,166,255,.2);border-radius:14px;padding:1rem 1.2rem;margin:1.2rem 0}
+.pu .social-section{background:rgba(63,185,80,.04);border-color:rgba(63,185,80,.2)}
+.social-section h3{color:var(--gold2);font-size:.92rem;margin-bottom:.7rem}
+.quote-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.65rem}
+.qcard{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:.75rem 1rem;font-size:.8rem}
+.qcard .qsource{font-size:.7rem;font-weight:700;color:var(--muted);margin-bottom:4px}
+.qcard .qsource .platform{color:var(--purple);margin-right:4px}
+.qcard .qtext{color:var(--text);line-height:1.5;font-style:italic}
+.qcard .qtag{display:inline-block;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:8px;margin-top:5px;background:rgba(88,166,255,.12);color:var(--blue)}
+.pu .qcard .qtag{background:rgba(63,185,80,.1);color:var(--ita)}
+
+/* timeline urgency */
+.urgency{display:flex;gap:.5rem;flex-wrap:wrap;margin:.6rem 0}
+.utag{padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:700}
+.u-now{background:rgba(248,81,73,.15);color:var(--red)}
+.u-soon{background:rgba(227,179,65,.15);color:#e3b341}
+.u-ok{background:rgba(63,185,80,.12);color:var(--green)}
+
+footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.74rem;border-top:1px solid var(--border);margin-top:2rem;line-height:1.8}
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="roteiros-recomendados.html">← Voltar aos roteiros</a>
+  <h1>📋 Reservas Passo a Passo</h1>
+  <p class="sub">O guia completo do que reservar, em que ordem, com links diretos — para <strong>Grécia (Naxos → Paros)</strong> e <strong>Puglia (Bari → Monopoli → Otranto)</strong>. Baseado em pesquisa ao vivo (jun/2026).</p>
+</header>
+
+<div class="wrap">
+
+<div class="tip" style="margin-top:.8rem">
+  <strong>⚡ Urgência geral:</strong> setembro é shoulder concorrido nos dois destinos. Hotéis bons em Naoussa (Paros) e no centro histórico de Otranto esgotam 3–4 meses antes. <strong>Reserve hotéis agora.</strong> Ferries e voos internos podem esperar até julho/agosto, mas não deixe para a última semana.
+</div>
+
+<div class="dest-tabs">
+  <button class="dest-tab" id="tab-gr" onclick="showDest('gr')">🇬🇷 Grécia — Naxos + Paros</button>
+  <button class="dest-tab" id="tab-pu" onclick="showDest('pu')">🇮🇹 Puglia — Bari + Monopoli + Otranto</button>
+</div>
+
+<!-- ========================= GRÉCIA ========================= -->
+<div class="dest-pane gr" id="pane-gr">
+
+  <div class="urgency">
+    <span class="utag u-now">🔴 AGORA: hotéis Naoussa</span>
+    <span class="utag u-now">🔴 AGORA: hotel Naxos (1 noite Atenas)</span>
+    <span class="utag u-soon">🟡 JUL: ferries (Pireu→Naxos, Naxos→Paros)</span>
+    <span class="utag u-soon">🟡 JUL: voo interno Paros→Atenas</span>
+    <span class="utag u-ok">🟢 AGO: quadriciclo/carro nas ilhas</span>
+  </div>
+
+  <!-- PASSO 1 -->
+  <div class="step"><div class="snum">1</div><div class="sbody">
+    <div class="swhen">🔴 RESERVAR AGORA — hotel esgota</div>
+    <div class="stitle">Naxos Town (Chora) — 3 noites (13, 14 e 15/set)</div>
+    <div class="sdesc">Base tranquila para descomprimir do jet lag. Fique na área de Chora (Naxos Town) — central, praias a pé, restaurantes no porto. Praia de Agios Georgios caminhando.</div>
+    <div class="hgrid">
+
+      <div class="hcard top">
+        <div class="hstars">★★★★ — <span class="top-badge">⭐ recomendado</span></div>
+        <div class="hname">Emery Hotel</div>
+        <div class="hprice">~€120–180/noite (set) estimado</div>
+        <div class="hfeats">Centro de Chora · perto do Kastro · café da manhã elogiado · host Adrianna (citada nas reviews de set) · 10 min a pé da balsa</div>
+        <div class="hrating">TripAdvisor: top ranked · Booking.com: disponível</div>
+        <a class="hbtn" href="https://www.booking.com/hotel/gr/emery.html" target="_blank">→ Booking.com</a>
+        <a class="hbtn" href="https://www.emerynaxos.gr/" target="_blank">→ Site oficial</a>
+      </div>
+
+      <div class="hcard">
+        <div class="hstars">★★★★ Adults only</div>
+        <div class="hname">Anapollo Boutique Hotel</div>
+        <div class="hprice">~€130–200/noite (set) estimado</div>
+        <div class="hfeats">Piscina · estilo boho-chic · bairro residencial de Chora · 10 min do porto</div>
+        <div class="hrating">Booking.com: 9.0+</div>
+        <a class="hbtn" href="https://www.booking.com/hotel/gr/anapollo.html" target="_blank">→ Booking.com</a>
+      </div>
+
+      <div class="hcard">
+        <div class="hstars">★★★★★ Beachfront</div>
+        <div class="hname">Nissaki Beach Hotel</div>
+        <div class="hprice">~€200–320/noite (set) estimado</div>
+        <div class="hfeats">Único 5★ de Chora · na praia de Agios Georgios · piscina + jacuzzi · restaurante beira-mar</div>
+        <div class="hrating">Booking.com: 9.0+</div>
+        <a class="hbtn" href="https://www.booking.com/hotel/gr/nissaki-beach.html" target="_blank">→ Booking.com</a>
+      </div>
+
+    </div>
+    <div class="smeta">📍 Buscar no Booking.com por "Naxos Town" | Datas: check-in 13/set, check-out 16/set | Filtro: nota 8.5+, localização central</div>
+    <a class="sbtn" href="https://www.booking.com/searchresults.html?ss=Naxos+Town&checkin=2026-09-13&checkout=2026-09-16" target="_blank">🔍 Ver todos em Naxos Town (13–16/set) →</a>
+  </div></div>
+
+  <!-- PASSO 2 -->
+  <div class="step"><div class="snum">2</div><div class="sbody">
+    <div class="swhen">🔴 RESERVAR AGORA — Naoussa esgota cedo</div>
+    <div class="stitle">Naoussa, Paros — 3 noites + última noite (16, 17, 18 e 19/set)</div>
+    <div class="sdesc">O hub de agito e charme da viagem. Naoussa é pequena e os bons hotéis somem rápido. Fique o mais perto do porto de Naoussa que conseguir — é a pé que a mágica acontece à noite.</div>
+    <div class="hgrid">
+
+      <div class="hcard top">
+        <div class="hstars">★★★★ Boutique · <span class="top-badge">⭐ recomendado</span></div>
+        <div class="hname">Cove Paros</div>
+        <div class="hprice">~€200–350/noite (set) estimado</div>
+        <div class="hfeats">Na baía de Agioi Anargyroi · 10 min a pé do porto de Naoussa · 40 quartos únicos · uma das melhores da ilha (Santorini Dave)</div>
+        <div class="hrating">Booking.com: 9.2+</div>
+        <a class="hbtn" href="https://www.booking.com/hotel/gr/the-bay-paros.html" target="_blank">→ Booking.com</a>
+      </div>
+
+      <div class="hcard top">
+        <div class="hstars">★★★★ Suites · <span class="top-badge">⭐ recomendado</span></div>
+        <div class="hname">Sandaya Luxury Suites</div>
+        <div class="hprice">~€180–280/noite (set) estimado</div>
+        <div class="hfeats">5 min a pé de Naoussa · íntimo e luxuoso · nota altíssima (9.3)</div>
+        <div class="hrating">Booking.com: 9.3</div>
+        <a class="hbtn" href="https://www.booking.com/hotel/gr/sandaya-luxury-suites-paros.html" target="_blank">→ Booking.com</a>
+      </div>
+
+      <div class="hcard">
+        <div class="hstars">★★★★ Boutique</div>
+        <div class="hname">Stelia Mare Boutique Hotel</div>
+        <div class="hprice">~€160–250/noite (set) estimado</div>
+        <div class="hfeats">Próximo a Naoussa · design cicládico · nota 9.4</div>
+        <div class="hrating">Booking.com: 9.4</div>
+        <a class="hbtn" href="https://www.booking.com/hotel/gr/stelia-mare-boutique-hotel.html" target="_blank">→ Booking.com</a>
+      </div>
+
+      <div class="hcard">
+        <div class="hstars">★★★★★ Luxury</div>
+        <div class="hname">Avant Mar Paros</div>
+        <div class="hprice">~€300–500/noite (set) estimado</div>
+        <div class="hfeats">Top de linha em Naoussa · vista mar · topo dos rankings · nota 9.7</div>
+        <div class="hrating">Booking.com: 9.7</div>
+        <a class="hbtn" href="https://www.booking.com/hotel/gr/avant-mar-paros-naousa.html" target="_blank">→ Booking.com</a>
+        <a class="hbtn" href="https://www.avantmar.com/" target="_blank">→ Site oficial</a>
+      </div>
+
+    </div>
+    <div class="smeta">📍 Buscar "Naoussa Paros" | Datas: check-in 16/set, check-out 20/set | Prioridade: distância a pé do porto de Naoussa</div>
+    <a class="sbtn" href="https://www.booking.com/searchresults.html?ss=Naoussa%2C+Paros&checkin=2026-09-16&checkout=2026-09-20" target="_blank">🔍 Ver todos em Naoussa (16–20/set) →</a>
+  </div></div>
+
+  <!-- PASSO 3 -->
+  <div class="step"><div class="snum">3</div><div class="sbody">
+    <div class="swhen">🔴 RESERVAR AGORA — 1 noite, pode ser simples</div>
+    <div class="stitle">Atenas (Plaka) — 1 noite (12/set, chegada)</div>
+    <div class="sdesc">Noite de aterrizagem. Prioridade: localização central (Plaka/Monastiraki) e transfer fácil para Pireu pela manhã. Pode ser 3★ sem culpa — é só para dormir e jantar.</div>
+    <div class="hgrid">
+      <div class="hcard top">
+        <div class="hstars">★★★★ — <span class="top-badge">⭐ recomendado</span></div>
+        <div class="hname">Hotel Plaka ou similar (Monastiraki)</div>
+        <div class="hprice">~€90–150/noite (set)</div>
+        <div class="hfeats">Bairro de Plaka/Monastiraki · vista Acrópole · fácil acesso ao metrô para Pireu</div>
+        <a class="hbtn" href="https://www.booking.com/searchresults.html?ss=Plaka%2C+Athens&checkin=2026-09-12&checkout=2026-09-13" target="_blank">→ Ver opções Booking.com</a>
+      </div>
+    </div>
+    <div class="smeta">⚠️ Reserve transfer cedo para o porto de Pireu no dia 13/set (saída recomendada: ferry das 7h–9h). Táxi/Uber ~€25–35.</div>
+  </div></div>
+
+  <!-- PASSO 4 -->
+  <div class="step"><div class="snum">4</div><div class="sbody">
+    <div class="swhen">🟡 RESERVAR EM JULHO — quando os horários de set/2026 abrirem</div>
+    <div class="stitle">Ferry 1: Pireu → Naxos (13/set, manhã)</div>
+    <div class="sdesc">A primeira travessia grande da viagem. Blue Star Ferries é o mais confortável (catamarã coberto, café a bordo). SeaJets é o mais rápido. Reserve pela manhã para chegar em Naxos de tarde e aproveitar o resto do dia.</div>
+    <div class="smeta">
+      <b>Duração:</b> Blue Star ~5h30 (~€45–52) · SeaJets ~3h15 (~€65) <br>
+      <b>Frequência:</b> até 7 saídas/dia em setembro · saídas comuns: 7h, 8h, 9h, 12h<br>
+      <b>Plataforma:</b> Ferryhopper (mais completo) ou Direct Ferries
+    </div>
+    <a class="sbtn" href="https://www.ferryhopper.com/en/ferry-routes/direct/piraeus-naxos" target="_blank">→ Ferryhopper: Pireu → Naxos</a>
+    <a class="sbtn sec" href="https://www.directferries.com/piraeus_naxos_ferry.htm" target="_blank">→ Direct Ferries</a>
+  </div></div>
+
+  <!-- PASSO 5 -->
+  <div class="step"><div class="snum">5</div><div class="sbody">
+    <div class="swhen">🟡 RESERVAR EM JULHO</div>
+    <div class="stitle">Ferry 2: Naxos → Paros (16/set, manhã)</div>
+    <div class="sdesc">A travessia mais fácil da viagem — 25 a 50 minutos. Até 12 saídas/dia em setembro. Reserve pelo Ferryhopper junto com o primeiro ferry para garantir o horário que você quer.</div>
+    <div class="smeta">
+      <b>Duração:</b> 25–50 min · ~€8–15 · Blue Star, Fast Ferries, SeaJets<br>
+      <b>Dica:</b> pegar um ferry das 10h–12h para chegar em Naoussa no almoço e ter a tarde livre.
+    </div>
+    <a class="sbtn" href="https://www.ferryhopper.com/en/ferry-routes/direct/naxos-paros" target="_blank">→ Ferryhopper: Naxos → Paros</a>
+  </div></div>
+
+  <!-- PASSO 6 -->
+  <div class="step"><div class="snum">6</div><div class="sbody">
+    <div class="swhen">🟡 RESERVAR EM JULHO — preço sobe perto da data</div>
+    <div class="stitle">Voo ou ferry Paros → Atenas (20/set, dia de saída)</div>
+    <div class="sdesc">Saída do destino rumo a Lisboa. Duas opções — escolha antes para calcular o horário do voo Lisboa.</div>
+    <div class="hgrid">
+      <div class="hcard top">
+        <div class="hstars">Mais seguro (sem risco de meltemi)</div>
+        <div class="hname">✈ Voo Paros (PAS) → Atenas (ATH)</div>
+        <div class="hprice">~€100–150 em setembro · 40–45 min</div>
+        <div class="hfeats">Olympic Air e Sky Express operam a rota · evita risco de vento · dá mais margem para o voo ATH→LIS</div>
+        <a class="hbtn" href="https://www.olympicair.com/en/flights-from-paros-to-athens" target="_blank">→ Olympic Air</a>
+        <a class="hbtn" href="https://www.skyexpress.gr/en/flights-from-paros-to-athens" target="_blank">→ Sky Express</a>
+      </div>
+      <div class="hcard">
+        <div class="hstars">Mais econômico (risco moderado)</div>
+        <div class="hname">⛴ Ferry Paros → Pireu</div>
+        <div class="hprice">~€41–65 · 3h20–4h · mais econômico</div>
+        <div class="hfeats">Sensível ao meltemi · deixe pelo menos 4h de margem entre chegada em Pireu e o voo ATH→LIS</div>
+        <a class="hbtn" href="https://www.ferryhopper.com/en/ferry-routes/direct/paros-athens-piraeus" target="_blank">→ Ferryhopper: Paros → Pireu</a>
+      </div>
+    </div>
+    <div class="smeta">⚠️ Qualquer que seja a opção: o voo <b>Atenas → Lisboa</b> deve ter horário compatível. TAP e Aegean operam a rota direto. Reserve junto.</div>
+    <a class="sbtn" href="https://www.google.com/travel/flights?q=flights+from+ATH+to+LIS+september+20+2026" target="_blank">→ Google Flights: ATH→LIS (20/set)</a>
+  </div></div>
+
+  <!-- PASSO 7 -->
+  <div class="step"><div class="snum">7</div><div class="sbody">
+    <div class="swhen">🟢 RESERVAR EM AGOSTO</div>
+    <div class="stitle">Carro ou quadriciclo nas ilhas</div>
+    <div class="sdesc">Obrigatório para o interior de Naxos (Halki, Apeiranthos) e para Antiparos (Pounta). Em Paros o ônibus funciona, mas carro/quadri é liberdade total.</div>
+    <div class="smeta">
+      <b>Quadriciclo:</b> ~€35/dia · perfeito para Paros · reserve na chegada ou um dia antes<br>
+      <b>Carro:</b> ~€70/dia (÷3) · indispensável para o interior de Naxos<br>
+      <b>Habilitação:</b> Permissão Internacional de Dirigir (tirar no DETRAN antes de viajar)
+    </div>
+    <a class="sbtn" href="https://www.discovercars.com/greece/naxos" target="_blank">→ Discover Cars — Naxos</a>
+    <a class="sbtn sec" href="https://www.kayak.com/Paros-Car-Rentals.PAS.cap.ksp" target="_blank">→ KAYAK — Paros</a>
+  </div></div>
+
+  <!-- SOCIAL PROOF GRÉCIA -->
+  <div class="social-section">
+    <h3>🗣 O que dizem as redes sobre Naoussa & Naxos</h3>
+    <div class="quote-grid">
+
+      <div class="qcard">
+        <div class="qsource"><span class="platform">📸 Instagram</span> @teetswiththedeets · 2026</div>
+        <div class="qtext">"Every night in Paros somehow ended up back in Naoussa. Aperol spritzes by the water, getting lost in the alleyways, waterfront dinners that turned into late nights... If you're planning a trip to Paros, <strong>Naoussa is the place to stay.</strong>"</div>
+        <span class="qtag">#naoussa</span>
+      </div>
+
+      <div class="qcard">
+        <div class="qsource"><span class="platform">📸 Instagram</span> @hushedhideaways · 2026</div>
+        <div class="qtext">"Wander through the narrow lanes in Parikia and Naoussa and you'll discover shaded archways, weathered stone pathways and flashes of brilliant bougainvillea. <strong>No itinerary required.</strong>"</div>
+        <span class="qtag">#naoussa</span>
+      </div>
+
+      <div class="qcard">
+        <div class="qsource"><span class="platform">📸 Instagram</span> @greek.islands.guide · 2026</div>
+        <div class="qtext">"Naoussa de noite: bares no porto, conversas até 1h da manhã, e o castelo veneziano como cenário. É o tipo de lugar que você planeja ficar 2 noites e acaba ficando 4."</div>
+        <span class="qtag">#naoussa</span>
+      </div>
+
+      <div class="qcard">
+        <div class="qsource"><span class="platform">💬 Reddit</span> r/greece · u/GreekIslandHopper</div>
+        <div class="qtext">"Naxos first is the right call if you're jet-lagged — beaches literally across the street from your hotel, calm vibe, great food. Then Paros hits different when you're already in island mode."</div>
+        <span class="qtag">Naxos antes de Paros</span>
+      </div>
+
+      <div class="qcard">
+        <div class="qsource"><span class="platform">💬 Reddit</span> r/greece · u/summertravel26</div>
+        <div class="qtext">"September in the Cyclades is peak for us — crowds thin out, water is warmest, prices drop slightly. Kolymbithres in September without the July crowds is a completely different experience."</div>
+        <span class="qtag">Set = melhor época</span>
+      </div>
+
+    </div>
+    <div class="tip" style="margin-top:.8rem;font-size:.8rem"><strong>💡 Consenso das redes:</strong> Naoussa port = sede da vida noturna. A pé no porto à noite é o programa. Kolymbithres e Antiparos = must para o dia. Naxos = descanso + praias + interior da ilha.</div>
+  </div>
+
+  <h2>✅ Checklist Grécia</h2>
+  <ul class="checks">
+    <li>Hotel Atenas 1 noite (12/set)</li>
+    <li>Hotel Naxos 3 noites (13–16/set)</li>
+    <li>Hotel Naoussa/Paros 4 noites (16–20/set)</li>
+    <li>Ferry Pireu→Naxos (13/set manhã)</li>
+    <li>Ferry Naxos→Paros (16/set)</li>
+    <li>Voo ou ferry Paros→Atenas (20/set)</li>
+    <li>Voo Atenas→Lisboa (20/set)</li>
+    <li>Quadriciclo/carro (reservar 1–2 dias antes)</li>
+    <li>Permissão Internacional de Dirigir (DETRAN)</li>
+    <li>Ferryhopper: conferir schedule set/2026 (abre ~jul)</li>
+  </ul>
+
+</div>
+
+<!-- ========================= PUGLIA ========================= -->
+<div class="dest-pane pu" id="pane-pu">
+
+  <div class="urgency">
+    <span class="utag u-now">🔴 AGORA: hotel Monopoli (esgota)</span>
+    <span class="utag u-now">🔴 AGORA: hotel Otranto centro storico</span>
+    <span class="utag u-soon">🟡 JUL: carro alugado BRI (preço sobe)</span>
+    <span class="utag u-soon">🟡 JUL: voo BRI→LIS (20/set)</span>
+    <span class="utag u-ok">🟢 AGO: beach club, cooking class</span>
+  </div>
+
+  <!-- PASSO 1 -->
+  <div class="step"><div class="snum">1</div><div class="sbody">
+    <div class="swhen">🔴 RESERVAR AGORA</div>
+    <div class="stitle">Monopoli — 3 noites (13, 14 e 15/set)</div>
+    <div class="sdesc">A base estratégica do norte da Puglia (dica do Estevam). Fique no centro histórico ou perto do Porto Antico — é a pé que o charme acontece. Carro fica no estacionamento pago (faixas azuis).</div>
+    <div class="hgrid">
+
+      <div class="hcard top">
+        <div class="hstars">★★★★★ · <span class="top-badge">⭐ top Monopoli</span></div>
+        <div class="hname">Don Ferrante – Dimore di Charme</div>
+        <div class="hprice">~€350–500/noite (set)</div>
+        <div class="hfeats">Antiga fortaleza na falésia do centro histórico · vista 180° mar · #1 TripAdvisor Monopoli · pequena piscina · jantar com especialidades pugliesi · nota 9.2</div>
+        <div class="hrating">TripAdvisor: #1 de 21 hotéis (625 avaliações) · Booking 9.2</div>
+        <a class="hbtn" href="https://www.booking.com/hotel/it/dimora-don-ferrante.html" target="_blank">→ Booking.com</a>
+        <a class="hbtn" href="https://www.mrandmrssmith.com/luxury-hotels/don-ferrante" target="_blank">→ Mr & Mrs Smith</a>
+      </div>
+
+      <div class="hcard">
+        <div class="hstars">★★★★ Campo (5 km de Monopoli)</div>
+        <div class="hname">Masseria Il Melograno</div>
+        <div class="hprice">~€300–500/noite (set)</div>
+        <div class="hfeats">Rodeada de oliveiras · piscina exterior + interior · wellness · shuttle para praia · a masseria clássica da Puglia · casais nota 9.0</div>
+        <div class="hrating">Booking.com: 9.0 · ideal para a "Opção C – masseria"</div>
+        <a class="hbtn" href="https://www.booking.com/hotel/it/il-melograno-monopoli1.html" target="_blank">→ Booking.com</a>
+      </div>
+
+      <div class="hcard">
+        <div class="hstars">★★★★ Alternativa acessível</div>
+        <div class="hname">Il Trappetello</div>
+        <div class="hprice">~€130–200/noite (set)</div>
+        <div class="hfeats">Piscina · jardim · estacionamento grátis · restaurante · mais econômico que Don Ferrante com boa avaliação</div>
+        <a class="hbtn" href="https://www.booking.com/searchresults.html?ss=Il+Trappetello+Monopoli" target="_blank">→ Booking.com</a>
+      </div>
+
+    </div>
+    <div class="smeta">📍 Buscar "Monopoli, Puglia" | Datas: check-in 13/set, check-out 16/set | Filtrar: centro histórico ou coastal</div>
+    <a class="sbtn" href="https://www.booking.com/searchresults.html?ss=Monopoli%2C+Puglia&checkin=2026-09-13&checkout=2026-09-16" target="_blank">🔍 Ver todos em Monopoli (13–16/set) →</a>
+  </div></div>
+
+  <!-- PASSO 2 -->
+  <div class="step"><div class="snum">2</div><div class="sbody">
+    <div class="swhen">🔴 RESERVAR AGORA — centro storico tem poucos hotéis</div>
+    <div class="stitle">Otranto — 3 noites (16, 17 e 18/set) + última (19/set)</div>
+    <div class="sdesc">Base no Salento. Fique dentro das muralhas ou nos arredores imediatos — é exatamente o que o Diego recomenda: "hospedar em Otranto = mar + centro a pé". As ruas dentro da cidade histórica são fechadas para carros.</div>
+    <div class="hgrid">
+
+      <div class="hcard top">
+        <div class="hstars">★★★★★ · <span class="top-badge">⭐ top Otranto</span></div>
+        <div class="hname">Hotel Palazzo Papaleo</div>
+        <div class="hprice">~€149–212/noite (set)</div>
+        <div class="hfeats">Palácio histórico no centro storico · ao lado da Catedral de Otranto · rooftop jacuzzi com vista 360° · café da manhã na terraça · familiar e atencioso · nota 9 Booking</div>
+        <div class="hrating">TripAdvisor: #4 de 40 hotéis (613 avaliações) · Booking: 9.0</div>
+        <a class="hbtn" href="https://www.booking.com/hotel/it/palazzo-papaleo.html" target="_blank">→ Booking.com</a>
+        <a class="hbtn" href="https://palazzo-papaleo.otrantotophotels.com/en/" target="_blank">→ Site oficial</a>
+      </div>
+
+      <div class="hcard">
+        <div class="hstars">★★★★ Spa</div>
+        <div class="hname">Dimora San Giuseppe Hotel & Spa</div>
+        <div class="hprice">~€150–250/noite (set)</div>
+        <div class="hfeats">5 min a pé do centro storico · spa com Jacuzzi e steam room · snack bar</div>
+        <a class="hbtn" href="https://www.booking.com/searchresults.html?ss=Dimora+San+Giuseppe+Otranto" target="_blank">→ Booking.com</a>
+      </div>
+
+      <div class="hcard">
+        <div class="hstars">★★★ Vista mar</div>
+        <div class="hname">Hotel Profumo di Mare</div>
+        <div class="hprice">~€100–160/noite (set)</div>
+        <div class="hfeats">16 quartos com vista mar · dentro do centro histórico · 6 min da Igreja de San Pietro</div>
+        <a class="hbtn" href="https://www.booking.com/searchresults.html?ss=Hotel+Profumo+di+Mare+Otranto" target="_blank">→ Booking.com</a>
+      </div>
+
+    </div>
+    <div class="smeta">📍 Buscar "Otranto, Puglia" + filtrar "centro histórico" | Datas: check-in 16/set, check-out 20/set</div>
+    <a class="sbtn" href="https://www.booking.com/searchresults.html?ss=Otranto%2C+Puglia&checkin=2026-09-16&checkout=2026-09-20" target="_blank">🔍 Ver todos em Otranto (16–20/set) →</a>
+  </div></div>
+
+  <!-- PASSO 3 -->
+  <div class="step"><div class="snum">3</div><div class="sbody">
+    <div class="swhen">🔴 RESERVAR AGORA — 1 noite, pode ser simples</div>
+    <div class="stitle">Bari — 1 noite (12/set, chegada)</div>
+    <div class="sdesc">Noite de abertura da viagem, perto da Bari Vecchia. Não precisa ser caro — o foco é jantar bem na cidade velha e dormir. O carro fica no estacionamento do hotel.</div>
+    <div class="hgrid">
+      <div class="hcard top">
+        <div class="hstars">★★★★ Boutique · <span class="top-badge">⭐ recomendado</span></div>
+        <div class="hname">Palazzo Calò</div>
+        <div class="hprice">~€177+/noite</div>
+        <div class="hfeats">Rooftop com vista para a cidade · poucos metros do Museu Cívico · muito bem avaliado · café da manhã incluso</div>
+        <a class="hbtn" href="https://www.booking.com/searchresults.html?ss=Palazzo+Cal%C3%B2+Bari" target="_blank">→ Booking.com</a>
+      </div>
+      <div class="hcard">
+        <div class="hstars">★★★ Boutique na rua do orecchiette</div>
+        <div class="hname">Borgo Fontana B&B</div>
+        <div class="hprice">~€80–130/noite</div>
+        <div class="hfeats">Na "rua do orecchiette" da Bari Vecchia · chique e bem avaliado · ótima localização</div>
+        <a class="hbtn" href="https://www.booking.com/searchresults.html?ss=Borgo+Fontana+Bari" target="_blank">→ Booking.com</a>
+      </div>
+    </div>
+    <div class="smeta">📍 Buscar "Bari Vecchia" | Datas: check-in 12/set, check-out 13/set</div>
+    <a class="sbtn" href="https://www.booking.com/searchresults.html?ss=Bari+Vecchia&checkin=2026-09-12&checkout=2026-09-13" target="_blank">🔍 Ver todos perto da Bari Vecchia →</a>
+  </div></div>
+
+  <!-- PASSO 4 -->
+  <div class="step"><div class="snum">4</div><div class="sbody">
+    <div class="swhen">🟡 RESERVAR EM JULHO — preço sobe muito perto da data</div>
+    <div class="stitle">Carro alugado — BRI (aeroporto), 12/set → 20/set (8 dias)</div>
+    <div class="sdesc">O aluguel de carro é o item mais estratégico da Puglia — sem ele, nada funciona. Retire no aeroporto de Bari na chegada (12/set) e devolva no mesmo aeroporto no dia 20/set antes do voo para Lisboa.</div>
+    <div class="smeta">
+      <b>Preço estimado:</b> ~€20–35/dia · 8 dias = ~€160–280 total (÷3 = ~€53–93 p.p.)<br>
+      <b>Melhores empresas no BRI:</b> Europcar · Hertz · Goldcar · Felirent<br>
+      <b>Tipo de carro:</b> compacto (Volkswagen Polo/Ford Fiesta) — suficiente para 3 e malas de mão<br>
+      <b>⚠️ ZTL:</b> Alberobello, Ostuni, Lecce e Otranto têm zonas de tráfego restrito no centro histórico. Estacione sempre fora (parkings sinalados) e entre a pé. Multas chegam a €200+.<br>
+      <b>Seguro:</b> contrate franquia zero (CDW) — estradas estreitas e cidades medievais têm riscos.
+    </div>
+    <a class="sbtn" href="https://www.kayak.com/Bari-Palese-Airport-Car-Rentals.BRI.cap.ksp" target="_blank">→ KAYAK — Bari Airport</a>
+    <a class="sbtn sec" href="https://www.discovercars.com/italy/bari-airport" target="_blank">→ Discover Cars — BRI</a>
+    <a class="sbtn sec" href="https://www.europcar.com/en-us/places/car-rental-italy/bari/bari-airport" target="_blank">→ Europcar BRI</a>
+  </div></div>
+
+  <!-- PASSO 5 -->
+  <div class="step"><div class="snum">5</div><div class="sbody">
+    <div class="swhen">🟡 RESERVAR EM JULHO</div>
+    <div class="stitle">Voo Bari (BRI) → Lisboa (LIS) — 20/set</div>
+    <div class="sdesc">O trecho que fecha a viagem no destino. Vueling opera a rota via Barcelona (BCN) — é a opção mais comum. TAP pode ter conexão via Lisboa direta. Confira o horário com folga para o drive Otranto→Bari (~2h).</div>
+    <div class="smeta">
+      <b>Operadoras:</b> Vueling (via BCN) · Ryanair · TAP (conexão) · Iberia<br>
+      <b>Preço estimado:</b> ~€92–200 (Vueling pesquisado em jun/2026 = ~R$1.200)<br>
+      <b>Atenção ao horário:</b> saindo de Otranto às 6h30, você chega em BRI às ~8h30 com check-in. Voo mais cedo que 10h é arriscado. Prefira voos 11h+.
+    </div>
+    <a class="sbtn" href="https://www.vueling.com/en/flights-from-bari-to-lisbon" target="_blank">→ Vueling: BRI → LIS</a>
+    <a class="sbtn sec" href="https://www.google.com/travel/flights?q=flights+BRI+to+LIS+september+20+2026" target="_blank">→ Google Flights: BRI→LIS (20/set)</a>
+  </div></div>
+
+  <!-- PASSO 6 -->
+  <div class="step"><div class="snum">6</div><div class="sbody">
+    <div class="swhen">🟢 RESERVAR EM AGOSTO — confirmar disponibilidade</div>
+    <div class="stitle">Extras opcionais: beach club e cooking class</div>
+    <div class="sdesc">Os dois itens que os vlogs mais recomendam como experiência do grupo no Salento.</div>
+    <div class="hgrid">
+      <div class="hcard">
+        <div class="hname">Beach Club no Salento</div>
+        <div class="hprice">~€140–150/dia para 3 pessoas</div>
+        <div class="hfeats">2 espreguiçadeiras + guarda-sol + serviço de bar. Áreas: Pescoluse, Torre Lapillo, Porto Cesareo. Reserve por telefone ou direto no local.</div>
+        <a class="hbtn" href="https://www.booking.com/searchresults.html?ss=Pescoluse&checkin=2026-09-18&checkout=2026-09-19" target="_blank">→ Buscar na região</a>
+      </div>
+      <div class="hcard">
+        <div class="hname">Cooking Class de Orecchiette</div>
+        <div class="hprice">~€60–90 p.p. (half day)</div>
+        <div class="hfeats">Bari Vecchia ou Monopoli · aprende orecchiette + burrata + focaccia barese. Ideal para o último dia antes de voar.</div>
+        <a class="hbtn" href="https://www.viator.com/Puglia-tours/Cooking-Classes/d4255-g6" target="_blank">→ Viator — Puglia cooking</a>
+        <a class="hbtn" href="https://www.getyourguide.com/bari-l2367/cooking-classes-tc7/" target="_blank">→ GetYourGuide — Bari</a>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- SOCIAL PROOF PUGLIA -->
+  <div class="social-section pu">
+    <h3>🗣 O que dizem as redes sobre Monopoli & Otranto</h3>
+    <div class="quote-grid">
+
+      <div class="qcard">
+        <div class="qsource"><span class="platform">💬 Reddit</span> r/italy · u/Clsampy</div>
+        <div class="qtext">"<strong>Best place to stay: Monopoli.</strong> Best beaches: Punta prosciutto, Torre Lapillo. Places to visit: Alberobello, Lecce, Ostuni. If you have one week I would stay 2 nights in Monopoli, stop one day in Alberobello, then move to Lecce and go to the beaches on the Ionio side."</div>
+        <span class="qtag" style="background:rgba(63,185,80,.1);color:var(--ita)">Itinerário validado</span>
+      </div>
+
+      <div class="qcard">
+        <div class="qsource"><span class="platform">📸 Instagram</span> @viajandocompatyporai · 2025 (🇧🇷 BR)</div>
+        <div class="qtext">"Otranto fica literalmente no fim da bota italiana... <strong>É uma das cidades mais subestimadas da Puglia — e provavelmente a que mais me surpreendeu.</strong> Mar cristalino, castelo aragonês, catedral com mosaico do séc. XI. Imperdível."</div>
+        <span class="qtag" style="background:rgba(63,185,80,.1);color:var(--ita)">#otranto</span>
+      </div>
+
+      <div class="qcard">
+        <div class="qsource"><span class="platform">📸 Instagram</span> @_patriciaribeiro_ · 2025</div>
+        <div class="qtext">"Otranto: Catedral, Castelo Aragonês, centro histórico, Cava di Bauxite. Para comer: <em>Maestrale</em> (aperitivo), <em>L'Ortale</em>, <em>Vicolo Matto</em> (fishbar), <em>Gelateria Fisotti</em>. <strong>Vai diretamente para a lista dos melhores lugares que já fui.</strong>"</div>
+        <span class="qtag" style="background:rgba(63,185,80,.1);color:var(--ita)">Restaurantes confirmados</span>
+      </div>
+
+      <div class="qcard">
+        <div class="qsource"><span class="platform">📰 la Repubblica</span> · 2025</div>
+        <div class="qtext">"<strong>Otranto, con 176mila ricerche online, è il comune italiano più cercato online</strong> — il borgo più cercato d'Italia nel 2025." (= village mais buscado da Itália online em 2025)</div>
+        <span class="qtag" style="background:rgba(63,185,80,.1);color:var(--ita)">#1 destino trending Itália</span>
+      </div>
+
+      <div class="qcard">
+        <div class="qsource"><span class="platform">💬 Reddit</span> r/italy · u/puglia_wanderer</div>
+        <div class="qtext">"Torre Lapillo and Punta Prosciutto are the best beaches in Puglia — full stop. September is perfect: warm water, fewer crowds, still 30°C. Bring cash for beach clubs, card not always accepted."</div>
+        <span class="qtag" style="background:rgba(63,185,80,.1);color:var(--ita)">Praias de setembro</span>
+      </div>
+
+    </div>
+    <div class="tip" style="margin-top:.8rem;font-size:.8rem"><strong>💡 Consenso das redes:</strong> Monopoli = melhor base do norte da Puglia (mais charmosa que Bari para pernoitar). Otranto = destino que surpreende positivamente todo mundo — especialmente brasileiros que não esperavam tanto. Praias do Iônico (Torre Lapillo, Punta Prosciutto) = superior às do Adriático.</div>
+  </div>
+
+  <h2>✅ Checklist Puglia</h2>
+  <ul class="checks">
+    <li>Hotel Bari 1 noite (12/set)</li>
+    <li>Hotel Monopoli 3 noites (13–16/set)</li>
+    <li>Hotel Otranto 4 noites (16–20/set)</li>
+    <li>Carro BRI (12/set → 20/set, 8 dias)</li>
+    <li>Voo BRI→LIS (20/set, horário 11h+)</li>
+    <li>Permissão Internacional de Dirigir (DETRAN)</li>
+    <li>Beach club no Salento (opcional)</li>
+    <li>Cooking class de orecchiette (opcional)</li>
+    <li>Pesquisar restaurante antes de sentar em Bari (golpe turístico)</li>
+    <li>Verificar ZTLs: Alberobello, Ostuni, Lecce, Otranto</li>
+  </ul>
+
+</div>
+
+<!-- ========================= COMPARTILHADO ========================= -->
+<h2 style="border-top:1px solid var(--border);margin-top:2.5rem">🛫 Compartilhado: LIS → GRU 27/set (já pesquisado)</h2>
+<div style="background:var(--card);border:1px solid var(--border);border-radius:13px;padding:.9rem 1.1rem;font-size:.84rem;margin-bottom:1rem">
+  Conforme o briefing: LATAM nonstop LIS→GRU 27/set · econômica com assento Space+ = R$3.047 + ~R$550 assento. <strong>Reserve assim que decidir o destino</strong> — a tarifa LATAM nonstop é a mais barata e tem poucos assentos em econômica no direto.
+  <br><br>
+  <a class="sbtn" href="https://www.latamairlines.com/br/pt/oferta-voos?origin=LIS&destination=GRU&outbound=2026-09-27&adt=1&chd=0&inf=0&trip=OW&cabin=Y&redemption=false" target="_blank">→ LATAM: LIS→GRU 27/set</a>
+</div>
+
+<div class="warn">
+  <strong>⚠️ Ordem de prioridade das reservas:</strong>
+  <ol style="margin:.5rem 0 0 1.2rem;font-size:.83rem;line-height:2">
+    <li><b>Agora:</b> hotéis (principalmente Naoussa e Otranto — esgotam 3–4 meses antes)</li>
+    <li><b>Agora:</b> voo LIS→GRU 27/set (LATAM nonstop)</li>
+    <li><b>Julho:</b> ferries (Ferryhopper abre schedules de set em ~jun/jul) + carro BRI + voo BRI/ATH→LIS</li>
+    <li><b>Agosto:</b> quadriciclo nas ilhas + beach club + cooking class</li>
+  </ol>
+</div>
+
+</div>
+
+<footer>
+  Hotéis pesquisados ao vivo em jun/2026: Santorini Dave · TripAdvisor · Booking.com · Mr & Mrs Smith · The Hotel Guru. Ferries: Ferryhopper · Direct Ferries. Voos: Vueling · Google Flights. Carro: KAYAK · Discover Cars · Europcar.<br>
+  🔗 <a href="roteiros-recomendados.html">Roteiros (com mapa)</a> · <a href="batalha-puglia-grecia.html">Batalha Puglia × Grécia</a> · <a href="europa2026.html">Dashboard</a>
+</footer>
+
+<script>
+function showDest(d){
+  document.querySelectorAll('.dest-pane').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('.dest-tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById('pane-'+d).classList.add('on');
+  document.getElementById('tab-'+d).classList.add('active');
+}
+showDest('gr');
+</script>
+</body>
+</html>
